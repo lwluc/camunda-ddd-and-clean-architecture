@@ -25,19 +25,19 @@ Using the admin user (`username: admin` and `password: pw`) you could log in to 
 
 ## 🏗Architecture
 
-In the following sections contains some small aspects explaining the advantages of Domain Driven Design (DDD) and clean architecture.
+In the following sections contains some small aspects explaining the advantages of Domain-driven Design (DDD) and clean architecture.
 
 ![DDD-Clean-Architecture](./assets/camunda-ddd-and-clean-architecture.png)
 
 ### DDD
 
-Using Domain Drive Design or to be more precise tactical DDD you could be way more expressive and closer to your business domain. Beside that the focus in *immutability* and building object that know all about their *invariants* helps you to structure your code. Such DDD Elements can be found in our [domain-primitives](https://github.com/domain-primitives/domain-primitives-java) library.
+Using Domain-driven Design or to be more precise tactical DDD you could be way more expressive and closer to your business domain. Beside that the focus in *immutability* and building object that know all about their *invariants* helps you to structure your code. Such DDD Elements can be found in our [domain-primitives](https://github.com/domain-primitives/domain-primitives-java) library.
 
 Structuring your code functional and brining more context to your object with, e.g. Value Object does not only help you to keep your code expressive, it also helps keeping it close to you business as your BPMN model.
 
 ### Clean
 
-Using clean architecture as architecture style combines perfectly with Domain Driven Design, because we completely focus on our domain.
+Using clean architecture as architecture style combines perfectly with Domain-driven Design, because we completely focus on our domain.
 
 Flexibility around your domain is the main focus I want to show you in this little example. 
 
