@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 
-import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
+import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LoanAgreement.LOAN_AGREEMENT_NUMBER;
 import static org.mockito.Mockito.*;
 
 @MockitoSettings

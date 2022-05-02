@@ -2,6 +2,7 @@ package de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model;
 
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient.MailAddress;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient.Name;
+import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient.Recipient;
 import io.github.domainprimitives.validation.InvariantException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

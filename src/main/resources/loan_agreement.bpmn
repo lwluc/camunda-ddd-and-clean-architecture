@@ -18,26 +18,15 @@
       <bpmn:outgoing>Flow_0xpo6jp</bpmn:outgoing>
       <bpmn:outgoing>Flow_1hri7xc</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="LoanAgreementNotApprovedEndEvent" name="loan agreement not approved">
-      <bpmn:incoming>Flow_0eif63m</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:endEvent id="LoanAgreementApprovedEndEvent" name="loan agreement approved">
-      <bpmn:incoming>Flow_1uqmps7</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:serviceTask id="ApproveLoanAgreementServiceTask" name="Approve loan agreement" camunda:delegateExpression="${approveLoanAgreement}">
       <bpmn:incoming>Flow_1hri7xc</bpmn:incoming>
       <bpmn:outgoing>Flow_1uqmps7</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="RejectLoanAgreementServiceTask" name="Rejection loan agreement" camunda:delegateExpression="${rejectionLoanAgreement}">
-      <bpmn:incoming>Flow_0xpo6jp</bpmn:incoming>
-      <bpmn:outgoing>Flow_0eif63m</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:startEvent id="LoanAgreementReciedStartEvent" name="loan agreement recived" camunda:asyncAfter="true">
       <bpmn:outgoing>Flow_1rrsueh</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1j9r08u" messageRef="Message_0o102df" />
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_0eif63m" sourceRef="RejectLoanAgreementServiceTask" targetRef="LoanAgreementNotApprovedEndEvent" />
-    <bpmn:sequenceFlow id="Flow_1uqmps7" sourceRef="ApproveLoanAgreementServiceTask" targetRef="LoanAgreementApprovedEndEvent" />
+    <bpmn:sequenceFlow id="Flow_1uqmps7" sourceRef="ApproveLoanAgreementServiceTask" targetRef="SendCrossSellingEvent" />
     <bpmn:sequenceFlow id="Flow_1hri7xc" name="yes" sourceRef="IsApprovedGateway" targetRef="ApproveLoanAgreementServiceTask">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -46,28 +35,38 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_00ukhfv" sourceRef="ApproveAgreementRuleTask" targetRef="IsApprovedGateway" />
     <bpmn:sequenceFlow id="Flow_1rrsueh" sourceRef="LoanAgreementReciedStartEvent" targetRef="ApproveAgreementRuleTask" />
+    <bpmn:serviceTask id="RejectLoanAgreementServiceTask" name="Rejection loan agreement" camunda:delegateExpression="${rejectionLoanAgreement}">
+      <bpmn:incoming>Flow_0xpo6jp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0eif63m</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0eif63m" sourceRef="RejectLoanAgreementServiceTask" targetRef="LoanAgreementNotApprovedEndEvent" />
+    <bpmn:endEvent id="LoanAgreementApprovedEndEvent" name="loan agreement approved">
+      <bpmn:incoming>Flow_1pvaqlv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1pvaqlv" sourceRef="SendCrossSellingEvent" targetRef="LoanAgreementApprovedEndEvent" />
+    <bpmn:intermediateThrowEvent id="SendCrossSellingEvent" name="Send cross-selling recommendaiton">
+      <bpmn:incoming>Flow_1uqmps7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pvaqlv</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0drw25h" camunda:delegateExpression="${sendCrossSellingRecommendation}" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="LoanAgreementNotApprovedEndEvent" name="loan agreement not approved">
+      <bpmn:incoming>Flow_0eif63m</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="Message_0o102df" name="loanAgreementReceivedMessage" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0w4ikjr">
       <bpmndi:BPMNShape id="Participant_1p6ilgg_di" bpmnElement="Participant_1p6ilgg" isHorizontal="true">
-        <dc:Bounds x="160" y="177" width="720" height="250" />
+        <dc:Bounds x="160" y="177" width="820" height="255" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0eif63m_di" bpmnElement="Flow_0eif63m">
-        <di:waypoint x="700" y="360" />
-        <di:waypoint x="772" y="360" />
+      <bpmndi:BPMNEdge id="Flow_1rrsueh_di" bpmnElement="Flow_1rrsueh">
+        <di:waypoint x="258" y="237" />
+        <di:waypoint x="330" y="237" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1uqmps7_di" bpmnElement="Flow_1uqmps7">
-        <di:waypoint x="700" y="237" />
-        <di:waypoint x="772" y="237" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1hri7xc_di" bpmnElement="Flow_1hri7xc">
-        <di:waypoint x="535" y="237" />
-        <di:waypoint x="600" y="237" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="559" y="219" width="18" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Flow_00ukhfv_di" bpmnElement="Flow_00ukhfv">
+        <di:waypoint x="430" y="237" />
+        <di:waypoint x="485" y="237" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xpo6jp_di" bpmnElement="Flow_0xpo6jp">
         <di:waypoint x="510" y="262" />
@@ -77,13 +76,24 @@
           <dc:Bounds x="519" y="308" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00ukhfv_di" bpmnElement="Flow_00ukhfv">
-        <di:waypoint x="430" y="237" />
-        <di:waypoint x="485" y="237" />
+      <bpmndi:BPMNEdge id="Flow_1hri7xc_di" bpmnElement="Flow_1hri7xc">
+        <di:waypoint x="535" y="237" />
+        <di:waypoint x="600" y="237" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="559" y="219" width="18" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1rrsueh_di" bpmnElement="Flow_1rrsueh">
-        <di:waypoint x="258" y="237" />
-        <di:waypoint x="330" y="237" />
+      <bpmndi:BPMNEdge id="Flow_1uqmps7_di" bpmnElement="Flow_1uqmps7">
+        <di:waypoint x="700" y="237" />
+        <di:waypoint x="772" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eif63m_di" bpmnElement="Flow_0eif63m">
+        <di:waypoint x="700" y="360" />
+        <di:waypoint x="772" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pvaqlv_di" bpmnElement="Flow_1pvaqlv">
+        <di:waypoint x="808" y="237" />
+        <di:waypoint x="882" y="237" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_1244zx8_di" bpmnElement="ApproveAgreementRuleTask">
         <dc:Bounds x="330" y="197" width="100" height="80" />
@@ -93,18 +103,6 @@
         <dc:Bounds x="485" y="212" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="478" y="182" width="65" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0r30zqn_di" bpmnElement="LoanAgreementNotApprovedEndEvent">
-        <dc:Bounds x="772" y="342" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="752" y="385" width="77" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1csw1p9_di" bpmnElement="LoanAgreementApprovedEndEvent">
-        <dc:Bounds x="772" y="219" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="752" y="262" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_13yt0mp_di" bpmnElement="ApproveLoanAgreementServiceTask">
@@ -121,21 +119,39 @@
           <dc:Bounds x="202" y="262" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1ilsqo5" bpmnElement="Participant_0z5fkq5" isHorizontal="true">
-        <dc:Bounds x="500" y="80" width="300" height="60" />
-        <bpmndi:BPMNLabel />
+      <bpmndi:BPMNShape id="Event_0mxjaa5_di" bpmnElement="LoanAgreementApprovedEndEvent">
+        <dc:Bounds x="882" y="219" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="862" y="262" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hg5yw3_di" bpmnElement="SendCrossSellingEvent">
+        <dc:Bounds x="772" y="219" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="750" y="262" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1i3yo9j_di" bpmnElement="LoanAgreementNotApprovedEndEvent">
+        <dc:Bounds x="772" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="752" y="385" width="77" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_1s9mw1a_di" bpmnElement="Participant_0y932pu" isHorizontal="true">
         <dc:Bounds x="500" y="460" width="300" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1ax0a41_di" bpmnElement="Flow_1ax0a41">
-        <di:waypoint x="650" y="197" />
-        <di:waypoint x="650" y="140" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_1ilsqo5" bpmnElement="Participant_0z5fkq5" isHorizontal="true">
+        <dc:Bounds x="500" y="80" width="300" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1ytdopc_di" bpmnElement="Flow_1ytdopc">
         <di:waypoint x="650" y="400" />
         <di:waypoint x="650" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ax0a41_di" bpmnElement="Flow_1ax0a41">
+        <di:waypoint x="650" y="197" />
+        <di:waypoint x="650" y="140" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

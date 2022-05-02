@@ -1,7 +1,6 @@
-package de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model;
+package de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient;
 
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient.MailAddress;
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient.Name;
+import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.CustomerNumber;
 import io.github.domainprimitives.object.ComposedValueObject;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

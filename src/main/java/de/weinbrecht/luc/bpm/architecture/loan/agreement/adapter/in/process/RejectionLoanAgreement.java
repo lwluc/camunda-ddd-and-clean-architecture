@@ -8,7 +8,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
-import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
+import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LoanAgreement.LOAN_AGREEMENT_NUMBER;
 
 @Slf4j
 @RequiredArgsConstructor

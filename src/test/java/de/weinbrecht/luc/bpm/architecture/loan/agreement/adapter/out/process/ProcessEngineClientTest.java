@@ -11,8 +11,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
-import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.START_EVENT_MESSAGE_REF;
+import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LoanAgreement.LOAN_AGREEMENT_NUMBER;
+import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LoanAgreement.START_EVENT_MESSAGE_REF;
 import static org.mockito.Mockito.verify;
 
 @MockitoSettings

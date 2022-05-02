@@ -1,7 +1,8 @@
-package de.weinbrecht.luc.bpm.architecture;
+package de.weinbrecht.luc.bpm.architecture.loan.agreement;
 
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.in.process.ApproveLoanAgreement;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.in.process.RejectionLoanAgreement;
+import de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.in.process.SendCrossSellingRecommendation;
 import org.camunda.bpm.dmn.engine.DmnDecisionTableResult;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
@@ -16,8 +17,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
-import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.PROCESS_DEFINITION;
+import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LoanAgreement.LOAN_AGREEMENT_NUMBER;
+import static de.weinbrecht.luc.bpm.architecture.common.ProcessConstants.LoanAgreement.PROCESS_DEFINITION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
@@ -35,7 +36,11 @@ class ProcessTest {
     private static final String START_EVENT = "LoanAgreementReciedStartEvent";
     private static final String APPROVE_RULE_TASK = "ApproveAgreementRuleTask";
     private static final String APPROVE_AGREEMENT_SERVICE_TASK = "ApproveLoanAgreementServiceTask";
+    private static final String SEND_CROSS_SELLING_EVENT = "SendCrossSellingEvent";
+    private static final String APPROVED_END_EVENT = "LoanAgreementApprovedEndEvent";
+
     private static final String REJECT_AGREEMENT_SERVICE_TASK = "RejectLoanAgreementServiceTask";
+    private static final String NOT_APPROVED_END_EVENT = "LoanAgreementNotApprovedEndEvent";
 
     private static final String DMN_DEFINITION = "approvement-check";
 
@@ -43,6 +48,7 @@ class ProcessTest {
     void setUp() {
         registerJavaDelegateMock(ApproveLoanAgreement.class);
         registerJavaDelegateMock(RejectionLoanAgreement.class);
+        registerJavaDelegateMock(SendCrossSellingRecommendation.class);
     }
 
     @Test
@@ -61,8 +67,11 @@ class ProcessTest {
         assertThat(processInstance)
                 .hasPassed(START_EVENT,
                         APPROVE_RULE_TASK,
-                        APPROVE_AGREEMENT_SERVICE_TASK);
+                        APPROVE_AGREEMENT_SERVICE_TASK,
+                        SEND_CROSS_SELLING_EVENT,
+                        APPROVED_END_EVENT);
 
+        verifyJavaDelegateMock(SendCrossSellingRecommendation.class).executed();
         verifyJavaDelegateMock(ApproveLoanAgreement.class).executed();
 
         assertThat(processInstance).isEnded();
@@ -84,7 +93,8 @@ class ProcessTest {
         assertThat(processInstance)
                 .hasPassed(START_EVENT,
                         APPROVE_RULE_TASK,
-                        REJECT_AGREEMENT_SERVICE_TASK);
+                        REJECT_AGREEMENT_SERVICE_TASK,
+                        NOT_APPROVED_END_EVENT);
 
         verifyJavaDelegateMock(RejectionLoanAgreement.class).executed();
 

@@ -1,5 +1,6 @@
 package de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model;
 
+import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.recipient.Recipient;
 import io.github.domainprimitives.object.Aggregate;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

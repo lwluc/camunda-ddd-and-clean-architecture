@@ -1,10 +1,8 @@
-package de.weinbrecht.luc.bpm.architecture.loan.agreement;
+package de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.service;
 
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.CaseId;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreement;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreementNumber;
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.service.LoanAgreementException;
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.service.LoanAgreementService;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementCommand;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementDistributor;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementQuery;

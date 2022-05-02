@@ -37,7 +37,7 @@ Structuring your code functional and brining more context to your object with, e
 
 ### Clean
 
-Using clean architecture as architecture style combines perfectly with Domain-driven Design, because we completely focus on our domain.
+Using clean architecture as architecture style combines perfectly with Domain-driven Design, because we completely focus on our domain, by using the [Dependency Inversion Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle).
 
 Flexibility around your domain is the main focus I want to show you in this little example. 
 
