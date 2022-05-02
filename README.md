@@ -12,7 +12,6 @@ With the following POST request you could start the process:
 curl --request POST \
   --url http://localhost:8080/loan/agreement/1 \
   --header 'Content-Type: application/json' \
-  --cookie JSESSIONID=9E203C2691A2F320151C467311C720D1 \
   --data '
   "customerNumber": "A-11",
   "name": "Tester",
