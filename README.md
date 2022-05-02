@@ -26,7 +26,7 @@ Using the admin user (`username: admin` and `password: pw`) you could log in to 
 
 In the following sections contains some small aspects explaining the advantages of Domain-driven Design (DDD) and clean architecture.
 
-![DDD-Clean-Architecture](./assets/camunda-ddd-and-clean-architecture.png)
+![DDD-Clean-Architecture](./assets/camunda-ddd-and-clean-architecture-rings.png)
 
 ### DDD
 
