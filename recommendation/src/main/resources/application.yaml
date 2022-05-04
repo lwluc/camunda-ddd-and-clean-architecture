@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./camunda-recommendation-h2-database
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+camunda.bpm.admin-user:
+  id: admin
+  password: pw
+  generic-properties:
+    properties:
+      initializeTelemetry: false
+
+server:
+  port: 8081
