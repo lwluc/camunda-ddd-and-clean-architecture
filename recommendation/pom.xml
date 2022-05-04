@@ -21,6 +21,7 @@
         <version.domainprimitives>0.1.0</version.domainprimitives>
         <version.bpmAssert>1.1.0</version.bpmAssert>
         <version.camundaMockito>6.17.0</version.camundaMockito>
+        <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
     </properties>
 
     <dependencyManagement>
@@ -130,6 +131,11 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.surefirePlugin}</version>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
