@@ -56,7 +56,7 @@ class LoanAgreementServiceTest {
         assertThrows(LoanAgreementException.class,
                 () -> classUnderTest.create(loanAgreement, caseId));
 
-        verify(recommendationTrigger, never()).startLoanAgreement(caseId, any());
+        verify(recommendationTrigger, never()).startLoanAgreement(eq(caseId), any());
     }
 
     @Test
