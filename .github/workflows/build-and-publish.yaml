@@ -6,9 +6,12 @@ on:
       - 'main'
 
 jobs:
-  build-and-push:
+  loan-agreement-build-and-push:
     name: Build JAR and push Docker image
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./loan-agreement
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
@@ -22,6 +25,29 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}} .
+        run: docker build -t ${{env.repo}}-loan-agreement .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}
+        run: docker push ${{env.repo}}-loan-agreement
+
+  recommentdation-build-and-push:
+    name: Build JAR and push Docker image
+    runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./recommendation
+    env:
+      repo: lwluc/camunda-ddd-and-clean-architecture
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Maven Package
+        run: mvn clean package
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
+      - name: Build Docker image
+        run: docker build -t ${{env.repo}}-recommendation .
+      - name: Publish Docker image
+        run: docker push ${{env.repo}}-recommendation
