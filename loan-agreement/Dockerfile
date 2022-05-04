@@ -1,10 +1,10 @@
 FROM maven:3.8.5-openjdk-17 as build
 
-COPY ../pom.xml .
+COPY ./pom.xml .
 
 RUN mvn -B dependency:go-offline
 
-COPY ../src src
+COPY ./src src
 
 RUN mvn -B package
 
