@@ -10,7 +10,7 @@ RUN mvn -B package
 
 FROM openjdk:11-jre-slim-buster
 
-COPY --from=build ../target/recommendation.jar .
+COPY --from=build ./target/recommendation.jar .
 
 EXPOSE 8081
 
