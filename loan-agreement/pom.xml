@@ -22,6 +22,7 @@
         <version.bpmAssert>1.1.0</version.bpmAssert>
         <version.camundaMockito>6.17.0</version.camundaMockito>
         <version.okhttp>4.9.3</version.okhttp>
+        <version.archunitJunit5>0.23.1</version.archunitJunit5>
         <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
     </properties>
 
@@ -145,6 +146,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${version.archunitJunit5}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

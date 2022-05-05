@@ -13,7 +13,7 @@ public class Amount extends ValueObject<Integer> {
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass() == o.getClass()) {
-            ValueObject<Integer> valueObject = (ValueObject)o;
+            ValueObject valueObject = (ValueObject)o;
             return (valueObject.getValue()).equals(this.getValue());
         } else {
             return false;
