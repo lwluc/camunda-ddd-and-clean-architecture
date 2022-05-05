@@ -1,78 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_02tppq7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
-  <bpmn:collaboration id="Collaboration_197td5k">
-    <bpmn:participant id="Participant_1y5ozpf" name="Recommendation example" processRef="Cross_Selling_Recommendation" />
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_19vu2ot" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.0.0">
+  <bpmn:collaboration id="Collaboration_10bbmwl">
+    <bpmn:participant id="Participant_04vjgyb" name="Recommendation example" processRef="Cross_Selling_Recommendation" />
   </bpmn:collaboration>
   <bpmn:process id="Cross_Selling_Recommendation" name="Cross Selling Recommendation" isExecutable="true">
-    <bpmn:serviceTask id="PickContentServiceTask" name="Pick Content" camunda:delegateExpression="${pickContent}">
-      <bpmn:incoming>Flow_14xjzhy</bpmn:incoming>
-      <bpmn:outgoing>Flow_0klv1t5</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:startEvent id="CrossSellingStartEvent" name="Cross-Selling potential discovered">
-      <bpmn:outgoing>Flow_14xjzhy</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1ibjd8g" messageRef="Message_0hftsl2" />
+      <bpmn:outgoing>Flow_0mgasl2</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0mygnsf" messageRef="Message_2r0s72o" />
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_14xjzhy" sourceRef="CrossSellingStartEvent" targetRef="PickContentServiceTask" />
-    <bpmn:endEvent id="CrossSellingRecommendationEndEvent" name="Cross-Selling  recommendation sent">
-      <bpmn:incoming>Flow_1bnyw18</bpmn:incoming>
+    <bpmn:endEvent id="CrossSellingRecommendationEndEvent" name="Cross-Selling recommendation sent">
+      <bpmn:incoming>Flow_12yp5p7</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0klv1t5" sourceRef="PickContentServiceTask" targetRef="SendRecommendationServiceTask" />
-    <bpmn:sequenceFlow id="Flow_1bnyw18" sourceRef="SendRecommendationServiceTask" targetRef="CrossSellingRecommendationEndEvent" />
-    <bpmn:serviceTask id="SendRecommendationServiceTask" name="Send Recommendation" camunda:modelerTemplate="de.weinbrecht.luc.bpm.architecture.SendCustomNotificationTaskHandler" camunda:type="External" camunda:topic="sendCustomNotification">
+    <bpmn:serviceTask id="SendRecommendationServiceTask" name="Send Recommendation">
       <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="notificationAddress">${customerNumber}</camunda:inputParameter>
-          <camunda:inputParameter name="notificationContent">Hello ${customerNumber},
-
-this is a notification.
-
-Many greetings
-Luc</camunda:inputParameter>
-          <camunda:inputParameter name="notificationChannel">console</camunda:inputParameter>
-        </camunda:inputOutput>
+        <zeebe:taskDefinition type="send-recommendation" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0klv1t5</bpmn:incoming>
-      <bpmn:outgoing>Flow_1bnyw18</bpmn:outgoing>
+      <bpmn:incoming>Flow_1lskvls</bpmn:incoming>
+      <bpmn:outgoing>Flow_12yp5p7</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:serviceTask id="PickContentServiceTask" name="Pick Content">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="pick-content" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0mgasl2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lskvls</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0mgasl2" sourceRef="CrossSellingStartEvent" targetRef="PickContentServiceTask" />
+    <bpmn:sequenceFlow id="Flow_1lskvls" sourceRef="PickContentServiceTask" targetRef="SendRecommendationServiceTask" />
+    <bpmn:sequenceFlow id="Flow_12yp5p7" sourceRef="SendRecommendationServiceTask" targetRef="CrossSellingRecommendationEndEvent" />
   </bpmn:process>
-  <bpmn:message id="Message_0hftsl2" name="crossSellingPotentialDiscoveredMessage" />
+  <bpmn:message id="Message_2r0s72o" name="crossSellingPotentialDiscoveredMessage" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_197td5k">
-      <bpmndi:BPMNShape id="Participant_1y5ozpf_di" bpmnElement="Participant_1y5ozpf" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="610" height="180" />
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_10bbmwl">
+      <bpmndi:BPMNShape id="Participant_04vjgyb_di" bpmnElement="Participant_04vjgyb" isHorizontal="true">
+        <dc:Bounds x="160" y="90" width="600" height="190" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0bsm7s4_di" bpmnElement="PickContentServiceTask">
-        <dc:Bounds x="340" y="120" width="100" height="80" />
+      <bpmndi:BPMNEdge id="Flow_12yp5p7_di" bpmnElement="Flow_12yp5p7">
+        <di:waypoint x="600" y="177" />
+        <di:waypoint x="662" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lskvls_di" bpmnElement="Flow_1lskvls">
+        <di:waypoint x="440" y="177" />
+        <di:waypoint x="500" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mgasl2_di" bpmnElement="Flow_0mgasl2">
+        <di:waypoint x="285" y="177" />
+        <di:waypoint x="340" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_076x431_di" bpmnElement="CrossSellingStartEvent">
+        <dc:Bounds x="249" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="234" y="202" width="66" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hl5l0c_di" bpmnElement="CrossSellingRecommendationEndEvent">
+        <dc:Bounds x="662" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="639" y="202" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1aukzy6_di" bpmnElement="SendRecommendationServiceTask">
+        <dc:Bounds x="500" y="137" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1ct00fd_di" bpmnElement="CrossSellingStartEvent">
-        <dc:Bounds x="252" y="142" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="237" y="185" width="66" height="40" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Activity_0eljoe1_di" bpmnElement="PickContentServiceTask">
+        <dc:Bounds x="340" y="137" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_18vk8pm_di" bpmnElement="CrossSellingRecommendationEndEvent">
-        <dc:Bounds x="662" y="142" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="640" y="185" width="82" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1mimc5n_di" bpmnElement="SendRecommendationServiceTask">
-        <dc:Bounds x="500" y="120" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_14xjzhy_di" bpmnElement="Flow_14xjzhy">
-        <di:waypoint x="288" y="160" />
-        <di:waypoint x="340" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0klv1t5_di" bpmnElement="Flow_0klv1t5">
-        <di:waypoint x="440" y="160" />
-        <di:waypoint x="500" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1bnyw18_di" bpmnElement="Flow_1bnyw18">
-        <di:waypoint x="600" y="160" />
-        <di:waypoint x="662" y="160" />
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

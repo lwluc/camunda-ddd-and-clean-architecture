@@ -15,18 +15,28 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-starter</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-util</artifactId>
+            <version>${version.zeebe}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-test</artifactId>
+            <version>${version.zeebe}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

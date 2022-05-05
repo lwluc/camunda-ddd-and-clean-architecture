@@ -1,21 +1,36 @@
 package de.weinbrecht.luc.bpm.architecture.recommendation;
 
-import de.weinbrecht.luc.bpm.architecture.recommendation.adapter.in.process.PickContent;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension;
-import org.junit.jupiter.api.BeforeEach;
+import de.weinbrecht.luc.bpm.architecture.recommendation.usecase.in.RecommendationPicker;
+import de.weinbrecht.luc.bpm.architecture.recommendation.usecase.out.SendNotification;
+import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.api.response.ActivatedJob;
+import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
+import io.camunda.zeebe.process.test.filters.RecordStream;
+import io.camunda.zeebe.spring.test.ZeebeSpringTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 
-import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.CUSTOMER_NUMBER;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
-import static org.camunda.community.mockito.DelegateExpressions.registerJavaDelegateMock;
-import static org.camunda.community.mockito.DelegateExpressions.verifyJavaDelegateMock;
+import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.*;
+import static io.camunda.zeebe.process.test.filters.StreamFilter.processInstance;
+import static io.camunda.zeebe.protocol.record.RejectionType.NULL_VAL;
+import static io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent.ELEMENT_COMPLETED;
+import static io.camunda.zeebe.protocol.record.value.BpmnElementType.PROCESS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
-@ExtendWith(ProcessEngineExtension.class)
+// Source: https://github.com/camunda-community-hub/camunda-cloud-examples/blob/main/twitter-review-java-springboot/src/test/java/org/camunda/community/examples/twitter/TestTwitterProcess.java
+@Disabled
+@SpringBootTest
+@ZeebeSpringTest
 class ProcessTest {
 
     public static final String PROCESS_DEFINITION = "Cross_Selling_Recommendation";
@@ -25,34 +40,64 @@ class ProcessTest {
     private static final String SEND_RECOMMENDATION_SERVICE_TASK = "SendRecommendationServiceTask";
     private static final String END_EVENT = "CrossSellingRecommendationEndEvent";
 
-    @BeforeEach
-    void setUp() {
-        registerJavaDelegateMock(PickContent.class);
-    }
+    @Autowired
+    private ZeebeClient zeebe;
+
+    @Autowired
+    private ZeebeTestEngine zeebeTestEngine;
+
+    @MockBean
+    private RecommendationPicker recommendationPicker;
+
+    @MockBean
+    private SendNotification sendNotification;
 
     @Test
-    @Deployment(resources = "cross_selling_recommendation.bpmn")
-    void shouldExecuteProcess_happy_path() {
-        ProcessInstance processInstance = runtimeService().startProcessInstanceByKey(
-                PROCESS_DEFINITION,
-                Map.of(CUSTOMER_NUMBER, "A1")
-        );
+    void shouldExecuteProcess_happy_path() throws Exception {
+        zeebe.newPublishMessageCommand().messageName(START_EVENT_MESSAGE_REF).correlationKey("").send();
 
-        assertThat(processInstance)
-                .hasPassedInOrder(
-                        START_EVENT,
-                        PICK_CONTENT_SERVICE_TASK)
-                .isWaitingAtExactly(SEND_RECOMMENDATION_SERVICE_TASK);
+//        waitForProcessInstanceCompleted(getProcessInstanceId(RecordStream.of(zeebeTestEngine.getRecordStreamSource()), PROCESS_DEFINITION), Duration.ofSeconds(10));
 
-        verifyJavaDelegateMock(PickContent.class).executed();
+        waitForTaskAndComplete(PICK_CONTENT_SERVICE_TASK, PICK_CONTENT_TASK);
+        waitForTaskAndComplete(SEND_RECOMMENDATION_SERVICE_TASK, SEND_RECOMMENDATION_TASK);
 
-        complete(externalTask(SEND_RECOMMENDATION_SERVICE_TASK));
+        assertTrue(isProcessInstanceCompleted(RecordStream.of(zeebeTestEngine.getRecordStreamSource()), PROCESS_DEFINITION));
 
-        assertThat(processInstance)
-                .hasPassedInOrder(
-                        SEND_RECOMMENDATION_SERVICE_TASK,
-                        END_EVENT);
+        verify(recommendationPicker).pickContent();
+        verify(sendNotification).send(any());
+    }
 
-        assertThat(processInstance).isEnded();
+    private ActivatedJob waitForTaskAndComplete(String taskId, String jobName) throws Exception {
+        // Let the workflow engine do whatever it needs to do
+        zeebeTestEngine.waitForIdleState(Duration.ofSeconds(10));
+
+        // Now get all user tasks
+        List<ActivatedJob> jobs = zeebe.newActivateJobsCommand().jobType(jobName).maxJobsToActivate(1).send().join().getJobs();
+
+        // Should be only one
+        assertTrue(jobs.size() > 0, "Job for user task '" + taskId + "' does not exist");
+        ActivatedJob taskJob = jobs.get(0);
+        // Make sure it is the right one
+        if (taskId != null) {
+            assertEquals(taskId, taskJob.getElementId());
+        }
+
+        zeebe.newCompleteCommand(taskJob.getKey()).send().join();
+
+        return taskJob;
+    }
+
+    private ActivatedJob waitForTaskAndComplete(String taskId, String jobName, Map<String, Object> variables) throws Exception {
+        ActivatedJob taskJob = this.waitForTaskAndComplete(taskId, jobName);
+        zeebe.newCompleteCommand(taskJob.getKey()).variables(variables).send().join();
+        return taskJob;
+    }
+
+    private boolean isProcessInstanceCompleted(RecordStream recordStream, String bpmnProcessId) {
+        return processInstance(recordStream).withBpmnProcessId(bpmnProcessId).withRejectionType(NULL_VAL).withBpmnElementType(PROCESS).withIntent(ELEMENT_COMPLETED).stream().findFirst().isPresent();
+    }
+
+    private long getProcessInstanceId(RecordStream recordStream, String bpmnProcessId) {
+        return processInstance(recordStream).withBpmnProcessId(bpmnProcessId).withRejectionType(NULL_VAL).withBpmnElementType(PROCESS).stream().findFirst().get().getKey();
     }
 }

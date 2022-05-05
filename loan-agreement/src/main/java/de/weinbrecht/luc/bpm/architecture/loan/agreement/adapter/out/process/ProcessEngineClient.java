@@ -3,8 +3,8 @@ package de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.out.process;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.CaseId;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreementNumber;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.WorkflowCommand;
+import io.camunda.zeebe.client.ZeebeClient;
 import lombok.RequiredArgsConstructor;
-import org.camunda.bpm.engine.RuntimeService;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,12 +17,19 @@ import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.P
 @Component
 class ProcessEngineClient implements WorkflowCommand {
 
-    private final RuntimeService runtimeService;
+    private final ZeebeClient client;
 
     @Override
     public void startLoanAgreement(CaseId caseId, LoanAgreementNumber loanAgreementNumber) {
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put(LOAN_AGREEMENT_NUMBER, loanAgreementNumber.getValue());
-        runtimeService.startProcessInstanceByMessage(LOAN_START_EVENT_MESSAGE_REF, caseId.getValue(), processVariables);
+        client.newPublishMessageCommand()
+                .messageName(LOAN_START_EVENT_MESSAGE_REF)
+                .correlationKey("")
+                .variables(processVariables)
+                .send()
+                .exceptionally(throwable -> {
+                    throw new CouldNotPublishMessageException(throwable);
+                });
     }
 }

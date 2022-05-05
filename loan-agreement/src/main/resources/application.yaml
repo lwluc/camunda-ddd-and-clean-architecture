@@ -5,9 +5,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-camunda.bpm.admin-user:
-  id: admin
-  password: pw
-  generic-properties:
-    properties:
-      initializeTelemetry: false
+zeebe:
+  client:
+    cloud:
+      cluster-id: <your cluster ID>
+      client-id: <your client ID>
+      client-secret: <you secret>
