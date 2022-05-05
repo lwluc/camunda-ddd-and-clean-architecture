@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main, 'camunda-8' ]
+    branches: [ main, 'camunda-8', 'camunda-8-connector-sdk' ]
 
 jobs:
   loan-agreement-build:
@@ -48,9 +48,9 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}}-loan-agreement-camunda-8 .
+        run: docker build -t ${{env.repo}}-loan-agreement-camunda-8-connector-sdk .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}-loan-agreement-camunda-8
+        run: docker push ${{env.repo}}-loan-agreement-camunda-8-connector-sdk
 
   recommendation-build:
     name: Build Recommendation JAR
@@ -93,9 +93,9 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}}-recommendation-camunda-8 .
+        run: docker build -t ${{env.repo}}-recommendation-camunda-8-connector-sdk .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}-recommendation-camunda-8
+        run: docker push ${{env.repo}}-recommendation-camunda-8-connector-sdk
 
   custom-connector-build:
     name: Build Custom Connector JAR
@@ -113,7 +113,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: custom-notification-connector
-          path: custom-notification-connector/target/custom-notification-connector.jar
+          path: custom-notification-connector/target/custom-notification-connector-with-dependencies.jar
 
   custom-connector-publish:
     name: Push Custom Connector Docker Image
@@ -134,10 +134,10 @@ jobs:
         with:
           name: custom-notification-connector
       - name: Move to Directory
-        run: mkdir target && mv custom-notification-connector.jar ./target/custom-notification-connector.jar
+        run: mkdir target && mv custom-notification-connector-with-dependencies.jar ./target/custom-notification-connector-with-dependencies.jar
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}}-custom-notification-connector-camunda-8 .
+        run: docker build -t ${{env.repo}}-custom-notification-connector-camunda-8-connector-sdk .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}-custom-notification-connector-camunda-8
+        run: docker push ${{env.repo}}-custom-notification-connector-camunda-8-connector-sdk
