@@ -1,7 +1,6 @@
 package de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.out.db;
 
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreement;
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreementNumber;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

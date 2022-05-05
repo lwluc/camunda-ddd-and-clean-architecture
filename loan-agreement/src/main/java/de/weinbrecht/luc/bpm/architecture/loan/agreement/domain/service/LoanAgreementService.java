@@ -8,7 +8,7 @@ import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.in.LoanAgreemen
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementCommand;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementDistributor;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementQuery;
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.RecommendationTrigger;
+import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.WorkflowCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +17,15 @@ import org.springframework.stereotype.Service;
 public class LoanAgreementService implements LoanAgreementCreation, LoanAgreementStatusCommand {
 
     private final LoanAgreementCommand loanAgreementCommand;
-    private final RecommendationTrigger recommendationTrigger;
     private final LoanAgreementDistributor loanAgreementDistributor;
     private final LoanAgreementQuery loanAgreementQuery;
+    private final WorkflowCommand workflowCommand;
 
     @Override
     public void create(LoanAgreement loanAgreement, CaseId caseId) {
         try {
             LoanAgreement savedLoanAgreement = loanAgreementCommand.save(loanAgreement);
-            recommendationTrigger.startLoanAgreement(caseId, savedLoanAgreement);
+            workflowCommand.startLoanAgreement(caseId, savedLoanAgreement.getLoanAgreementNumber());
         } catch (Exception e) {
             throw new LoanAgreementException("Cloud not save the loan agreement", e);
         }

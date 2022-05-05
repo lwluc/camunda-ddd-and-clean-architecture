@@ -6,7 +6,7 @@ import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreem
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementCommand;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementDistributor;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementQuery;
-import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.RecommendationTrigger;
+import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.WorkflowCommand;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,7 +27,7 @@ class LoanAgreementServiceTest {
     private LoanAgreementCommand loanAgreementCommand;
 
     @Mock
-    private RecommendationTrigger recommendationTrigger;
+    private WorkflowCommand workflowCommand;
 
     @Mock
     private LoanAgreementDistributor loanAgreementDistributor;
@@ -44,7 +44,7 @@ class LoanAgreementServiceTest {
 
         classUnderTest.create(loanAgreement, caseId);
 
-        verify(recommendationTrigger).startLoanAgreement(caseId, savedLoanAgreement);
+        verify(workflowCommand).startLoanAgreement(caseId, savedLoanAgreement.getLoanAgreementNumber());
     }
 
     @Test
@@ -56,7 +56,7 @@ class LoanAgreementServiceTest {
         assertThrows(LoanAgreementException.class,
                 () -> classUnderTest.create(loanAgreement, caseId));
 
-        verify(recommendationTrigger, never()).startLoanAgreement(eq(caseId), any());
+        verify(workflowCommand, never()).startLoanAgreement(eq(caseId), any());
     }
 
     @Test
