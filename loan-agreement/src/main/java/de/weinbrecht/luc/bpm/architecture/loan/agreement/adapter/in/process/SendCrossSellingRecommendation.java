@@ -26,7 +26,6 @@ public class SendCrossSellingRecommendation {
         Long loanAgreementNumber = ((Number) job.getVariablesAsMap().get(LOAN_AGREEMENT_NUMBER)).longValue();
         LoanAgreement loanAgreement = loanAgreementQuery.loadByNumber(new LoanAgreementNumber(loanAgreementNumber));
 
-        // TODO: How to get the business key?
         recommendationTrigger.startLoanAgreement(new CaseId("11"), loanAgreement);
 
         client.newCompleteCommand(job.getKey())

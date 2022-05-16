@@ -34,7 +34,7 @@ import static org.mockito.Mockito.verify;
 @Disabled
 @SpringBootTest
 @ZeebeSpringTest
-class ProcessTest {
+class ProcessTestSpring {
 
     public static final String PROCESS_DEFINITION = "Loan_Agreement";
     private static final String START_EVENT = "LoanAgreementReceivedStartEvent";
