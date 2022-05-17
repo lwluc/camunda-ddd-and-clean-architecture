@@ -14,7 +14,14 @@
     </parent>
 
     <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <version.junit5>5.8.2</version.junit5>
+        <version.bpmAssert>1.1.0</version.bpmAssert>
         <version.archunitJunit5>0.23.1</version.archunitJunit5>
+        <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
+        <version.zeebe>8.0.1</version.zeebe>
     </properties>
 
     <dependencies>
@@ -37,9 +44,21 @@
         </dependency>
 
         <dependency>
-            <groupId>org.camunda.community.mockito</groupId>
-            <artifactId>camunda-platform-7-mockito</artifactId>
-            <version>${version.camundaMockito}</version>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${version.archunitJunit5}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-test</artifactId>
+            <version>${version.zeebe}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.camunda</groupId>
+            <artifactId>zeebe-process-test-extension</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
     </dependencies>

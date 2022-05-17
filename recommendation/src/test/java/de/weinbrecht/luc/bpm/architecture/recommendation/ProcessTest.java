@@ -6,12 +6,12 @@ import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
 import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
 import org.junit.jupiter.api.Test;
 
-import static de.weinbrecht.luc.bpm.architecture.recommendation.ProcessTestUtils.*;
+import static de.weinbrecht.luc.bpm.architecture.ProcessTestUtils.*;
 import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.*;
 import static io.camunda.zeebe.process.test.assertions.BpmnAssert.assertThat;
 
 @ZeebeProcessTest
-class ProcessTestZeebe {
+class ProcessTest {
 
     private ZeebeTestEngine engine;
     private ZeebeClient client;

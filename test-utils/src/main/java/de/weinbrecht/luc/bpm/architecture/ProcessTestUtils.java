@@ -1,4 +1,4 @@
-package de.weinbrecht.luc.bpm.architecture.loan.agreement;
+package de.weinbrecht.luc.bpm.architecture;
 
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.command.DeployResourceCommandStep1;
