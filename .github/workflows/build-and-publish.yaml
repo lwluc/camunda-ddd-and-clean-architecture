@@ -4,11 +4,32 @@ on:
   push:
     branches:
       - 'main'
+      - 'test-utils-module'
 
 jobs:
-  loan-agreement-build-and-push:
-    name: Build JAR and push Docker image
+  build-test-utils:
+    name: Build Test Utils
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./test-utils
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Maven Package
+        run: mvn clean package
+      - uses: actions/upload-artifact@v1
+        with:
+          name: test-utils-package
+          path: test-utils/target/test-utils.jar
+
+  loan-agreement-build:
+    name: Build Loan Agreement JAR
+    runs-on: ubuntu-18.04
+    needs: [ build-test-utils ]
     defaults:
       run:
         working-directory: ./loan-agreement
@@ -20,8 +41,39 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
+      - uses: actions/download-artifact@v1
+        with:
+          name: test-utils-package
+          path: ./loan-agreement
+      - name: Install Test Utils
+        run: mvn install:install-file -Dfile=./test-utils.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=test-utils -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
         run: mvn clean package
+      - uses: actions/upload-artifact@v1
+        with:
+          name: loan-agreement
+          path: loan-agreement/target/loan-agreement.jar
+
+  loan-agreement-publish:
+    name: Push Loan Agreement Docker image
+    runs-on: ubuntu-18.04
+    needs: [ loan-agreement-build ]
+    defaults:
+      run:
+        working-directory: ./loan-agreement
+    env:
+      repo: lwluc/camunda-ddd-and-clean-architecture
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - uses: actions/download-artifact@v1
+        with:
+          name: loan-agreement
+      - name: Move to Directory
+        run: mkdir target && mv loan-agreement.jar ./target/loan-agreement.jar
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
@@ -29,9 +81,10 @@ jobs:
       - name: Publish Docker image
         run: docker push ${{env.repo}}-loan-agreement
 
-  recommentdation-build-and-push:
-    name: Build JAR and push Docker image
+  recommendation-build:
+    name: Build Recommendation JAR
     runs-on: ubuntu-18.04
+    needs: [ build-test-utils ]
     defaults:
       run:
         working-directory: ./recommendation
@@ -43,8 +96,39 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
+      - uses: actions/download-artifact@v1
+        with:
+          name: test-utils-package
+          path: ./recommendation
+      - name: Install Test Utils
+        run: mvn install:install-file -Dfile=./test-utils.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=test-utils -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
         run: mvn clean package
+      - uses: actions/upload-artifact@v1
+        with:
+          name: recommendation
+          path: recommendation/target/recommendation.jar
+
+  recommendation-publish:
+    name: Push Recommendation Docker Image
+    runs-on: ubuntu-18.04
+    needs: [ recommendation-build ]
+    defaults:
+      run:
+        working-directory: ./recommendation
+    env:
+      repo: lwluc/camunda-ddd-and-clean-architecture
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - uses: actions/download-artifact@v1
+        with:
+          name: recommendation
+      - name: Move to Directory
+        run: mkdir target && mv recommendation.jar ./target/recommendation.jar
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
