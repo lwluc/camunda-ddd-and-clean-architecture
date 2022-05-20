@@ -4,7 +4,7 @@ An example to show how you could use clean architecture and DDD elements with Ca
 
 ## 🚀Features
 
-The [BPMN process](./assets/loan_agreement.png) is a tiny process just to demonstrate the architecture.
+The [BPMN process](assets/processes/loan_agreement.png) which start a [second process](assets/processes/cross_selling_recommendation.png) via message correlation should represent tiny business process just to demonstrate the architecture.
 
 ### 🛫Start the process
 
@@ -28,7 +28,7 @@ Using the admin user (`username: admin` and `password: pw`) you could log in to 
 
 The following sections contain some small aspects explaining the advantages of Domain-driven Design (DDD) and clean architecture.
 
-![DDD-Clean-Architecture](./assets/camunda-ddd-and-clean-architecture-rings.png)
+![DDD-Clean-Architecture](assets/architecture/camunda-ddd-and-clean-architecture-rings.png)
 
 ### DDD
 
@@ -50,7 +50,8 @@ The main advantage is the independence of any framework. Due to this fact the ar
 
 ## 🙏🏼Credits
 
-Thanks to [Matthias Eschhold](https://github.com/MatthiasEschhold) for the passionate discussion around DDD and clean architecture.
+Thanks to [Matthias Eschhold](https://github.com/MatthiasEschhold) for the passionate discussion around DDD and clean architecture. 
+Matthias published a nice blog series: [Clean Architecture and flexibility patterns](https://github.com/MatthiasEschhold/clean-architecture-and-flexibility-patterns)
 
 ## 📨Contact
 

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'main'
-      - 'test-utils-module'
 
 jobs:
   build-test-utils:
