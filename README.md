@@ -11,7 +11,7 @@ The [BPMN process](assets/processes/loan_agreement.png) which start a [second pr
 
 Configure your [Camunda Platform 8 SaaS](https://camunda.com/get-started/) to connect to using the [following properties](https://github.com/camunda-community-hub/spring-zeebe#configuring-camunda-platform-8-saas-connection) .
 
-If you want to run [Zeebe local](https://docs.camunda.io/docs/self-managed/platform-deployment/kubernetes-helm/) you need to use the following properties ([source](https://github.com/camunda-community-hub/spring-zeebe#configuring-camunda-platform-8-saas-connection)):
+If you want to run [Zeebe locally](https://docs.camunda.io/docs/self-managed/platform-deployment/kubernetes-helm/) you need to use the following properties ([source](https://github.com/camunda-community-hub/spring-zeebe#configuring-camunda-platform-8-saas-connection)):
 
 ```yaml
 zeebe:

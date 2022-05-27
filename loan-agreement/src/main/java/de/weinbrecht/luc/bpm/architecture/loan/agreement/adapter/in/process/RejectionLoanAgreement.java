@@ -21,7 +21,7 @@ public class RejectionLoanAgreement {
 
     @ZeebeWorker(type = LOAN_REJECTION_TASK, fetchVariables = LOAN_AGREEMENT_NUMBER)
     public void handleJobFoo(final JobClient client, final ActivatedJob job) {
-        Long loanAgreementNumber = (Long) job.getVariablesAsMap().get(LOAN_AGREEMENT_NUMBER);
+        Long loanAgreementNumber = ((Number) job.getVariablesAsMap().get(LOAN_AGREEMENT_NUMBER)).longValue();
         loanAgreementStatusCommand.reject(new LoanAgreementNumber(loanAgreementNumber));
 
         client.newCompleteCommand(job.getKey())
