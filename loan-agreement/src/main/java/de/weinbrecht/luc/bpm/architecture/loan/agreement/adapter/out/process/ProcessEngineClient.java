@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
-import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.LOAN_START_EVENT_MESSAGE_REF;
+import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.*;
 
 @RequiredArgsConstructor
 @Component
@@ -23,6 +22,7 @@ class ProcessEngineClient implements WorkflowCommand {
     public void startLoanAgreement(CaseId caseId, LoanAgreementNumber loanAgreementNumber) {
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put(LOAN_AGREEMENT_NUMBER, loanAgreementNumber.getValue());
+        processVariables.put(BUSINESS_KEY, caseId.getValue());
         client.newPublishMessageCommand()
                 .messageName(LOAN_START_EVENT_MESSAGE_REF)
                 .correlationKey("")

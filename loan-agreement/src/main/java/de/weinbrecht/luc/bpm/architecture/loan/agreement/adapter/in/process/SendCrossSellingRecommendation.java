@@ -11,8 +11,7 @@ import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
-import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.SEND_CROSS_SELLING_RECOMMENDATION_TASK;
+import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.*;
 
 @RequiredArgsConstructor
 @Component
@@ -24,9 +23,10 @@ public class SendCrossSellingRecommendation {
     @ZeebeWorker(type = SEND_CROSS_SELLING_RECOMMENDATION_TASK, fetchVariables = LOAN_AGREEMENT_NUMBER)
     public void handleJobFoo(final JobClient client, final ActivatedJob job) {
         Long loanAgreementNumber = ((Number) job.getVariablesAsMap().get(LOAN_AGREEMENT_NUMBER)).longValue();
+        String businessKey = (String) job.getVariablesAsMap().get(BUSINESS_KEY);
         LoanAgreement loanAgreement = loanAgreementQuery.loadByNumber(new LoanAgreementNumber(loanAgreementNumber));
 
-        recommendationTrigger.startLoanAgreement(new CaseId("11"), loanAgreement);
+        recommendationTrigger.startLoanAgreement(new CaseId(businessKey), loanAgreement);
 
         client.newCompleteCommand(job.getKey())
                 .send()
