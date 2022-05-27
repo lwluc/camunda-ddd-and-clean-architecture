@@ -31,6 +31,7 @@ class ProcessEngineClientTest {
     void should_call_zeebe_to_start_reommendation() {
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put(LOAN_AGREEMENT_NUMBER, loanAgreementNumber.getValue());
+        processVariables.put(BUSINESS_KEY, caseId.getValue());
 
         classUnderTest.startLoanAgreement(caseId, loanAgreementNumber);
 

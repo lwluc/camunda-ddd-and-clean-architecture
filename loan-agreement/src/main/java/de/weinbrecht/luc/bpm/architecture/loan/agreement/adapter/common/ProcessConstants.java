@@ -6,6 +6,7 @@ public class ProcessConstants {
     public static final String LOAN_AGREEMENT_NUMBER = "loanAgreementNumber";
     public static final String RECOMMENDATION_START_EVENT_MESSAGE_REF = "crossSellingPotentialDiscoveredMessage";
     public static final String RECOMMENDATION_CUSTOMER_NUMBER = "customerNumber";
+    public static final String BUSINESS_KEY = "businessKey";
 
     public static final String LOAN_AGREEMENT_TASK = "approve-loan-agreement";
     public static final String LOAN_REJECTION_TASK = "reject-loan-agreement";
