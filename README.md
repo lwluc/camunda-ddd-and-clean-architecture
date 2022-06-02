@@ -40,11 +40,18 @@ Using clean architecture as architecture style combines perfectly with Domain-dr
 
 [The origin of clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html).
 
-### DDD
+### Domain-driven Design
 
-Using Domain-driven Design you focus on your core business domain and the domain logic. With this fact in mind, you build your complex design around your domain. Keeping your domain as close to the real business as possible, you need to collaborate constantly with your business experts.
+Using clean architectures as architectural style does specify how you should structure your domain core (entities and use cases). 
+In my opinion, Domain-driven Design (DDD) perfectly combines with clean architecture due to the fact that DDD is focused on your business domain. 
+Focusing on your domain is supported by the goal of clean architecture, keeping the domain free of any framework or technologies. 
+E.g. your domain does not focus on how to persist something, it just tells the outgoing port to save it. 
+The implementation of the port (placed on the adapter layer) decides to use, e.g., relational or non-relational databases.
 
-Besides that, the focus in *immutability* and building object that know all about their *invariants* helps you to structure your code. Such DDD Elements can be found in our [domain-primitives](https://github.com/domain-primitives/domain-primitives-java) library.
+Beside the matching goal of DDD and clean architecture, DDD tries to help you build complex designs around your domain,
+by e.g., building immutable objects that know all about their invariants, which helps you even more to structure your code.
+
+DDD Elements like Aggregate Entities and ValueObject can be found in our [domain-primitives](https://github.com/domain-primitives/domain-primitives-java) library.
 
 Structuring your code functional and brining more context to your object with, e.g. Value Object does not only help you to keep your code expressive, it also helps keeping it close to your business as your BPMN model.
 
