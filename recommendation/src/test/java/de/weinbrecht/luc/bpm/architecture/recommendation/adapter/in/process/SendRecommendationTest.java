@@ -41,22 +41,14 @@ class SendRecommendationTest {
     void should_load_data_and_call_service_to_send_notification() {
         ContentId contentId = new ContentId(1L);
         CustomerId customerNumber = new CustomerId("A1");
-        JobClient client = mock(JobClient.class, RETURNS_DEEP_STUBS);
-        ActivatedJob job = mock(ActivatedJob.class);
-        Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put(CONTENT_NUMBER, contentId.getValue().intValue());
-        processVariables.put(CUSTOMER_NUMBER, customerNumber.getValue());
-        when(job.getVariablesAsMap()).thenReturn(processVariables);
-        when(job.getKey()).thenReturn(1L);
         Content content = new Content(contentId, new Description("Foo"));
         when(recommendationQuery.findContentById(contentId)).thenReturn(content);
         Customer customer = createCustomer(customerNumber);
         when(recommendationQuery.findCustomerById(customerNumber)).thenReturn(customer);
 
-        classUnderTest.handleJobFoo(client, job);
+        classUnderTest.handleJobFoo(contentId.getValue(), customerNumber.getValue());
 
         verify(sendNotification).send(new Recommendation(customer, content));
-        verify(client.newCompleteCommand(job.getKey())).send();
     }
 
     private Customer createCustomer(CustomerId customerId) {

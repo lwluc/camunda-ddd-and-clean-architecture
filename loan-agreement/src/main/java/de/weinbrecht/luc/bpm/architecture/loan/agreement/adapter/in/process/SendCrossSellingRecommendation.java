@@ -5,8 +5,7 @@ import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreem
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.domain.model.LoanAgreementNumber;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.LoanAgreementQuery;
 import de.weinbrecht.luc.bpm.architecture.loan.agreement.usecase.out.RecommendationTrigger;
-import io.camunda.zeebe.client.api.response.ActivatedJob;
-import io.camunda.zeebe.client.api.worker.JobClient;
+import io.camunda.zeebe.spring.client.annotation.ZeebeVariable;
 import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,18 +19,16 @@ public class SendCrossSellingRecommendation {
     private final RecommendationTrigger recommendationTrigger;
     private final LoanAgreementQuery loanAgreementQuery;
 
-    @ZeebeWorker(type = SEND_CROSS_SELLING_RECOMMENDATION_TASK, fetchVariables = LOAN_AGREEMENT_NUMBER)
-    public void handleJobFoo(final JobClient client, final ActivatedJob job) {
-        Long loanAgreementNumber = ((Number) job.getVariablesAsMap().get(LOAN_AGREEMENT_NUMBER)).longValue();
-        String businessKey = (String) job.getVariablesAsMap().get(BUSINESS_KEY);
-        LoanAgreement loanAgreement = loanAgreementQuery.loadByNumber(new LoanAgreementNumber(loanAgreementNumber));
+    @ZeebeWorker(
+            type = SEND_CROSS_SELLING_RECOMMENDATION_TASK,
+            fetchVariables = { LOAN_AGREEMENT_NUMBER, BUSINESS_KEY },
+            autoComplete = true
+    )
+    public void handleJobFoo(@ZeebeVariable Number loanAgreementNumber, @ZeebeVariable String businessKey) {
+        LoanAgreement loanAgreement = loanAgreementQuery.loadByNumber(
+                new LoanAgreementNumber(loanAgreementNumber.longValue())
+        );
 
         recommendationTrigger.startLoanAgreement(new CaseId(businessKey), loanAgreement);
-
-        client.newCompleteCommand(job.getKey())
-                .send()
-                .exceptionally(throwable -> {
-                    throw new CouldNotCompleteJobException(job, throwable);
-                });
     }
 }
