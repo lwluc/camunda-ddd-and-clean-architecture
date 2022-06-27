@@ -12,7 +12,7 @@ import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.*;
+import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.SEND_RECOMMENDATION_TASK;
 
 @RequiredArgsConstructor
 @Component
@@ -21,11 +21,7 @@ public class SendRecommendation {
     private final SendNotification sendNotification;
     private final RecommendationQuery recommendationQuery;
 
-    @ZeebeWorker(
-            type = SEND_RECOMMENDATION_TASK,
-            fetchVariables = {CONTENT_NUMBER, CUSTOMER_NUMBER},
-            autoComplete = true
-    )
+    @ZeebeWorker(type = SEND_RECOMMENDATION_TASK, autoComplete = true)
     public void handleJobFoo(@ZeebeVariable Number contentNumber, @ZeebeVariable String customerNumber) {
         Content content = recommendationQuery.findContentById(new ContentId(contentNumber.longValue()));
         Customer customer = recommendationQuery.findCustomerById(new CustomerId(customerNumber));

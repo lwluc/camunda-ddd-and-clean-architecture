@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.LOAN_AGREEMENT_NUMBER;
 import static de.weinbrecht.luc.bpm.architecture.loan.agreement.adapter.common.ProcessConstants.LOAN_AGREEMENT_TASK;
 
 @Slf4j
@@ -18,7 +17,7 @@ public class ApproveLoanAgreement {
 
     private final LoanAgreementStatusCommand loanAgreementStatusCommand;
 
-    @ZeebeWorker(type = LOAN_AGREEMENT_TASK, fetchVariables = LOAN_AGREEMENT_NUMBER, autoComplete = true)
+    @ZeebeWorker(type = LOAN_AGREEMENT_TASK, autoComplete = true)
     public void handleJobFoo(@ZeebeVariable Number loanAgreementNumber) {
         loanAgreementStatusCommand.accept(new LoanAgreementNumber(loanAgreementNumber.longValue()));
     }
