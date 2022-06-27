@@ -7,27 +7,24 @@ import de.weinbrecht.luc.bpm.architecture.recommendation.domain.model.customer.C
 import de.weinbrecht.luc.bpm.architecture.recommendation.domain.model.customer.CustomerId;
 import de.weinbrecht.luc.bpm.architecture.recommendation.usecase.out.RecommendationQuery;
 import de.weinbrecht.luc.bpm.architecture.recommendation.usecase.out.SendNotification;
+import io.camunda.zeebe.spring.client.annotation.ZeebeVariable;
+import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import lombok.RequiredArgsConstructor;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
-import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.CONTENT_NUMBER;
-import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.CUSTOMER_NUMBER;
+import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.SEND_RECOMMENDATION_TASK;
 
 @RequiredArgsConstructor
 @Component
-public class SendRecommendation implements JavaDelegate {
+public class SendRecommendation {
 
     private final SendNotification sendNotification;
     private final RecommendationQuery recommendationQuery;
 
-    @Override
-    public void execute(DelegateExecution execution) {
-        Long contentId = (Long) execution.getVariable(CONTENT_NUMBER);
-        String customerId = (String) execution.getVariable(CUSTOMER_NUMBER);
-        Content content = recommendationQuery.findContentById(new ContentId(contentId));
-        Customer customer = recommendationQuery.findCustomerById(new CustomerId(customerId));
+    @ZeebeWorker(type = SEND_RECOMMENDATION_TASK, autoComplete = true)
+    public void handleJobFoo(@ZeebeVariable Number contentNumber, @ZeebeVariable String customerNumber) {
+        Content content = recommendationQuery.findContentById(new ContentId(contentNumber.longValue()));
+        Customer customer = recommendationQuery.findCustomerById(new CustomerId(customerNumber));
 
         Recommendation recommendation = new Recommendation(customer, content);
 
