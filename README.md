@@ -2,6 +2,9 @@
 
 An example to show how you could use clean architecture and DDD and their advantages with Camunda.
 
+I also wrote a blog post to show how clean architecture could help you to update to Camunda Platform 8 without 
+touching your domain centered code: [How Clean Architecture helps you migrating Camunda Platform 7 to 8](https://www.novatec-gmbh.de/en/blog/how-clean-architecture-helps-you-migrating-camunda-platform-7-to-8/).
+
 ## 🚀Features
 
 The [BPMN process](assets/processes/loan_agreement.png) which start a [second process](assets/processes/cross_selling_recommendation.png) via message correlation should represent a tiny business process just to demonstrate the architecture.
