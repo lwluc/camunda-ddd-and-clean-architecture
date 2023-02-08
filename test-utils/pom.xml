@@ -14,7 +14,7 @@
 
         <version.junit5>5.8.2</version.junit5>
         <version.bpmAssert>1.1.0</version.bpmAssert>
-        <version.camundaMockito>6.17.0</version.camundaMockito>
+        <version.camundaMockito>6.18.0</version.camundaMockito>
         <version.archunitJunit5>0.23.1</version.archunitJunit5>
         <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
     </properties>
@@ -44,11 +44,6 @@
             <version>${version.camundaMockito}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5</artifactId>
-            <version>${version.archunitJunit5}</version>
-        </dependency>
     </dependencies>
 
     <build>

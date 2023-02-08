@@ -13,16 +13,16 @@ The [BPMN process](assets/processes/loan_agreement.png) which start a [second pr
 
 With the following POST request, you could start the process:
 
-```curl
+```sh
 curl --request POST \
   --url http://localhost:8080/loan/agreement/1 \
   --header 'Content-Type: application/json' \
-  --data '
-  "customerNumber": "A-11",
-  "name": "Tester",
-  "mailAddress": "tester@web.io",
-  "amount": 1100
-}'
+  --data '{
+    "customerNumber": "A-11",
+    "name": "Tester",
+    "mailAddress": "tester@web.io",
+    "amount": 1100
+  }'
 ```
 
 Using the admin user (`username: admin` and `password: pw`) you could log in to the Camunda Cockpit.
