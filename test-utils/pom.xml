@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>test-utils</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <parent>
         <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
@@ -17,14 +17,40 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
+        <version.springboot>2.7.5</version.springboot>
+        <version.zeebe>8.1.6</version.zeebe>
         <version.junit5>5.8.2</version.junit5>
         <version.bpmAssert>1.1.0</version.bpmAssert>
         <version.archunitJunit5>0.23.1</version.archunitJunit5>
         <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
-        <version.zeebe>8.0.1</version.zeebe>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${version.springboot}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.camunda</groupId>
+                <artifactId>zeebe-bom</artifactId>
+                <version>${version.zeebe}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -44,9 +70,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5</artifactId>
-            <version>${version.archunitJunit5}</version>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-starter</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
         <dependency>
