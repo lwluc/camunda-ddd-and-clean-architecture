@@ -1,10 +1,7 @@
-camunda.bpm:
-  default-serialization-format: application/json
-  metrics.enabled: false
+zeebe:
   client:
-    base-url: http://localhost:8081/engine-rest
-    async-response-timeout: 10000
-    worker-id: sendNotificationWorker-1
-  generic-properties:
-    properties:
-      initializeTelemetry: false
+    cloud:
+      cluster-id: <your cluster ID>
+      client-id: <your client ID>
+      client-secret: <your secret>
+      region: <your region>
