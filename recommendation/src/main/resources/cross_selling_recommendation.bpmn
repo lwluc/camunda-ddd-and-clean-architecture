@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_02tppq7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_02tppq7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
   <bpmn:collaboration id="Collaboration_197td5k">
     <bpmn:participant id="Participant_1y5ozpf" name="Recommendation example" processRef="Cross_Selling_Recommendation" />
   </bpmn:collaboration>
@@ -18,7 +18,19 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0klv1t5" sourceRef="PickContentServiceTask" targetRef="SendRecommendationServiceTask" />
     <bpmn:sequenceFlow id="Flow_1bnyw18" sourceRef="SendRecommendationServiceTask" targetRef="CrossSellingRecommendationEndEvent" />
-    <bpmn:serviceTask id="SendRecommendationServiceTask" name="Send Recommendation" camunda:delegateExpression="${sendRecommendation}">
+    <bpmn:serviceTask id="SendRecommendationServiceTask" name="Send Recommendation" camunda:modelerTemplate="de.weinbrecht.luc.bpm.architecture.SendCustomNotificationTaskHandler" camunda:type="External" camunda:topic="sendCustomNotification">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="notificationAddress">${customerNumber}</camunda:inputParameter>
+          <camunda:inputParameter name="notificationContent">Hello ${customerNumber},
+
+this is a notification.
+
+Many greetings
+Luc</camunda:inputParameter>
+          <camunda:inputParameter name="notificationChannel">console</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0klv1t5</bpmn:incoming>
       <bpmn:outgoing>Flow_1bnyw18</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -30,18 +42,6 @@
         <dc:Bounds x="160" y="80" width="610" height="180" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1bnyw18_di" bpmnElement="Flow_1bnyw18">
-        <di:waypoint x="600" y="160" />
-        <di:waypoint x="662" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0klv1t5_di" bpmnElement="Flow_0klv1t5">
-        <di:waypoint x="440" y="160" />
-        <di:waypoint x="500" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_14xjzhy_di" bpmnElement="Flow_14xjzhy">
-        <di:waypoint x="288" y="160" />
-        <di:waypoint x="340" y="160" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_0bsm7s4_di" bpmnElement="PickContentServiceTask">
         <dc:Bounds x="340" y="120" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -58,10 +58,21 @@
           <dc:Bounds x="640" y="185" width="82" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1shn36r" bpmnElement="SendRecommendationServiceTask">
+      <bpmndi:BPMNShape id="Activity_1mimc5n_di" bpmnElement="SendRecommendationServiceTask">
         <dc:Bounds x="500" y="120" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_14xjzhy_di" bpmnElement="Flow_14xjzhy">
+        <di:waypoint x="288" y="160" />
+        <di:waypoint x="340" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0klv1t5_di" bpmnElement="Flow_0klv1t5">
+        <di:waypoint x="440" y="160" />
+        <di:waypoint x="500" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bnyw18_di" bpmnElement="Flow_1bnyw18">
+        <di:waypoint x="600" y="160" />
+        <di:waypoint x="662" y="160" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
