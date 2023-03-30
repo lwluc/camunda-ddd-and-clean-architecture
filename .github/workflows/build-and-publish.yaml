@@ -25,6 +25,26 @@ jobs:
           name: test-utils-package
           path: test-utils/target/test-utils.jar
 
+  build-libraries-notification:
+    name: Build Libraries
+    runs-on: ubuntu-18.04
+    needs: [ build-test-utils ]
+    defaults:
+      run:
+        working-directory: ./libraries/notification
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Maven Package
+        run: mvn clean package
+      - uses: actions/upload-artifact@v1
+        with:
+          name: libraries-notification-package
+          path: libraries/notification/target/notification-jar-with-dependencies.jar
+
   loan-agreement-build:
     name: Build Loan Agreement JAR
     runs-on: ubuntu-18.04
@@ -134,3 +154,58 @@ jobs:
         run: docker build -t ${{env.repo}}-recommendation .
       - name: Publish Docker image
         run: docker push ${{env.repo}}-recommendation
+
+  custom-connector-build:
+    name: Build Custom Connector JAR
+    runs-on: ubuntu-18.04
+    needs: [ build-test-utils, build-libraries-notification ]
+    defaults:
+      run:
+        working-directory: ./custom-notification-connector
+    env:
+      repo: lwluc/camunda-ddd-and-clean-architecture
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - uses: actions/download-artifact@v1
+        with:
+          name: libraries-notification-package
+          path: ./custom-notification-connector
+      - name: Install Test Utils
+        run: mvn install:install-file -Dfile=./notification-jar-with-dependencies.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=notification -Dversion=1.0.0 -Dpackaging=jar
+      - name: Maven Package
+        run: mvn clean package
+      - uses: actions/upload-artifact@v1
+        with:
+          name: custom-notification-connector
+          path: custom-notification-connector/target/custom-notification-connector.jar
+
+  custom-connector-publish:
+    name: Push Custom Connector Docker Image
+    runs-on: ubuntu-18.04
+    needs: [ custom-connector-build ]
+    defaults:
+      run:
+        working-directory: ./custom-notification-connector
+    env:
+      repo: lwluc/camunda-ddd-and-clean-architecture
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - uses: actions/download-artifact@v1
+        with:
+          name: custom-notification-connector
+      - name: Move to Directory
+        run: mkdir target && mv custom-notification-connector.jar ./target/custom-notification-connector.jar
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
+      - name: Build Docker image
+        run: docker build -t ${{env.repo}}-custom-notification-connector .
+      - name: Publish Docker image
+        run: docker push ${{env.repo}}-custom-notification-connector
