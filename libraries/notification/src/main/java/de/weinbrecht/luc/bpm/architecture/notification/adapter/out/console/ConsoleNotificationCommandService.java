@@ -7,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
 @RequiredArgsConstructor
-class ConsoleNotificationCommandService implements NotificationCommand {
+public class ConsoleNotificationCommandService implements NotificationCommand {
 
     @Override
     public void sendPushNotification(Address address, Content content) {

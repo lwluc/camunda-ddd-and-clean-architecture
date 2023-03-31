@@ -43,7 +43,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: libraries-notification-package
-          path: libraries/notification/target/notification-jar-with-dependencies.jar
+          path: libraries/notification/target/notification-spring-boot-starter-jar-with-dependencies.jar
 
   loan-agreement-build:
     name: Build Loan Agreement JAR
@@ -174,8 +174,8 @@ jobs:
         with:
           name: libraries-notification-package
           path: ./custom-notification-connector
-      - name: Install Test Utils
-        run: mvn install:install-file -Dfile=./notification-jar-with-dependencies.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=notification -Dversion=1.0.0 -Dpackaging=jar
+      - name: Install Notification Library
+        run: mvn install:install-file -Dfile=./notification-spring-boot-starter-jar-with-dependencies.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=notification -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
         run: mvn clean package
       - uses: actions/upload-artifact@v1
