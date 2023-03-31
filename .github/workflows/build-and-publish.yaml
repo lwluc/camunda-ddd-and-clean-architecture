@@ -2,8 +2,9 @@ name: Build & Push (Docker)
 
 on:
   push:
-    branches:
-      - 'main'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-test-utils:
@@ -77,6 +78,7 @@ jobs:
     name: Push Loan Agreement Docker image
     runs-on: ubuntu-18.04
     needs: [ loan-agreement-build ]
+    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./loan-agreement
@@ -132,6 +134,7 @@ jobs:
     name: Push Recommendation Docker Image
     runs-on: ubuntu-18.04
     needs: [ recommendation-build ]
+    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./recommendation
@@ -175,7 +178,7 @@ jobs:
           name: libraries-notification-package
           path: ./custom-notification-connector
       - name: Install Notification Library
-        run: mvn install:install-file -Dfile=./notification-spring-boot-starter-jar-with-dependencies.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=notification -Dversion=1.0.0 -Dpackaging=jar
+        run: mvn install:install-file -Dfile=./notification-spring-boot-starter-jar-with-dependencies.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=notification-spring-boot-starter -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
         run: mvn clean package
       - uses: actions/upload-artifact@v1
@@ -187,6 +190,7 @@ jobs:
     name: Push Custom Connector Docker Image
     runs-on: ubuntu-18.04
     needs: [ custom-connector-build ]
+    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./custom-notification-connector
