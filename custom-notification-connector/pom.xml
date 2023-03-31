@@ -44,7 +44,7 @@
 
         <dependency>
             <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
-            <artifactId>notification</artifactId>
+            <artifactId>notification-spring-boot-starter</artifactId>
             <version>${version.notification}</version>
         </dependency>
 

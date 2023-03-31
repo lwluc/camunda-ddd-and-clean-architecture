@@ -7,9 +7,8 @@ import de.weinbrecht.luc.bpm.architecture.notification.usecase.out.NotificationC
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
-class SendNotificationService implements SendNotification {
+public class SendNotificationService implements SendNotification {
 
     private final NotificationCommand notificationCommand;
 
