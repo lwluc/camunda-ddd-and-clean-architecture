@@ -52,8 +52,7 @@ class SpringProcessTest {
     @MockBean
     private RecommendationQuery recommendationQuery;
 
-    @MockBean
-    private SendNotification sendNotification;
+    private static final String CONNECTOR_TOPIC = "de.weinbrecht.luc.bpm.architecture.sendcustomnotificationtaskhandler:1";
 
     private final ContentId contentId = new ContentId(1L);
     private final CustomerId customerId = new CustomerId("Test-11");
@@ -90,9 +89,7 @@ class SpringProcessTest {
 
         verify(recommendationPicker).pickContent();
 
-        waitForTaskAndComplete(zeebeTestEngine, zeebe, SEND_RECOMMENDATION_SERVICE_TASK, SEND_RECOMMENDATION_TASK);
-
-        verify(sendNotification).send(recommendation);
+        waitForTaskAndComplete(zeebeTestEngine, zeebe, SEND_RECOMMENDATION_SERVICE_TASK, CONNECTOR_TOPIC);
 
         assertTrue(isProcessInstanceCompleted(of(zeebeTestEngine.getRecordStreamSource()), PROCESS_DEFINITION));
     }
