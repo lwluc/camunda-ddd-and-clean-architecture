@@ -9,7 +9,7 @@ on:
 jobs:
   build-test-utils:
     name: Build Test Utils
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: ./test-utils
@@ -28,7 +28,7 @@ jobs:
 
   build-libraries-notification:
     name: Build Libraries
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ build-test-utils ]
     defaults:
       run:
@@ -48,7 +48,7 @@ jobs:
 
   loan-agreement-build:
     name: Build Loan Agreement JAR
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ build-test-utils ]
     defaults:
       run:
@@ -76,7 +76,7 @@ jobs:
 
   loan-agreement-publish:
     name: Push Loan Agreement Docker image
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ loan-agreement-build ]
     if: github.ref == 'refs/heads/main'
     defaults:
@@ -104,7 +104,7 @@ jobs:
 
   recommendation-build:
     name: Build Recommendation JAR
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ build-test-utils ]
     defaults:
       run:
@@ -132,7 +132,7 @@ jobs:
 
   recommendation-publish:
     name: Push Recommendation Docker Image
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ recommendation-build ]
     if: github.ref == 'refs/heads/main'
     defaults:
@@ -160,7 +160,7 @@ jobs:
 
   custom-connector-build:
     name: Build Custom Connector JAR
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ build-test-utils, build-libraries-notification ]
     defaults:
       run:
@@ -188,7 +188,7 @@ jobs:
 
   custom-connector-publish:
     name: Push Custom Connector Docker Image
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [ custom-connector-build ]
     if: github.ref == 'refs/heads/main'
     defaults:
