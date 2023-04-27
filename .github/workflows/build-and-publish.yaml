@@ -7,52 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build-test-utils:
-    name: Build Test Utils
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./test-utils
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-      - name: Maven Package
-        run: mvn clean package
-      - uses: actions/upload-artifact@v1
-        with:
-          name: test-utils-package
-          path: test-utils/target/test-utils.jar
-
-  build-libraries-notification:
-    name: Build Libraries
-    runs-on: ubuntu-22.04
-    needs: [ build-test-utils ]
-    defaults:
-      run:
-        working-directory: ./libraries/notification
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-      - name: Maven Package
-        run: mvn clean package
-      - uses: actions/upload-artifact@v1
-        with:
-          name: libraries-notification-package
-          path: libraries/notification/target/notification-spring-boot-starter-jar-with-dependencies.jar
-
   loan-agreement-build:
     name: Build Loan Agreement JAR
     runs-on: ubuntu-22.04
-    needs: [ build-test-utils ]
-    defaults:
-      run:
-        working-directory: ./loan-agreement
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
@@ -61,14 +18,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - uses: actions/download-artifact@v1
-        with:
-          name: test-utils-package
-          path: ./loan-agreement
-      - name: Install Test Utils
-        run: mvn install:install-file -Dfile=./test-utils.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=test-utils -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
-        run: mvn clean package
+        run: mvn clean package -pl loan-agreement -am
       - uses: actions/upload-artifact@v1
         with:
           name: loan-agreement
@@ -105,10 +56,6 @@ jobs:
   recommendation-build:
     name: Build Recommendation JAR
     runs-on: ubuntu-22.04
-    needs: [ build-test-utils ]
-    defaults:
-      run:
-        working-directory: ./recommendation
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
@@ -117,14 +64,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - uses: actions/download-artifact@v1
-        with:
-          name: test-utils-package
-          path: ./recommendation
-      - name: Install Test Utils
-        run: mvn install:install-file -Dfile=./test-utils.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=test-utils -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
-        run: mvn clean package
+        run: mvn clean package -pl recommendation -am
       - uses: actions/upload-artifact@v1
         with:
           name: recommendation
@@ -161,10 +102,6 @@ jobs:
   custom-connector-build:
     name: Build Custom Connector JAR
     runs-on: ubuntu-22.04
-    needs: [ build-test-utils, build-libraries-notification ]
-    defaults:
-      run:
-        working-directory: ./custom-notification-connector
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
@@ -173,14 +110,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - uses: actions/download-artifact@v1
-        with:
-          name: libraries-notification-package
-          path: ./custom-notification-connector
-      - name: Install Notification Library
-        run: mvn install:install-file -Dfile=./notification-spring-boot-starter-jar-with-dependencies.jar -DgroupId=de.weinbrecht.luc.bpm.architecture -DartifactId=notification-spring-boot-starter -Dversion=1.0.0 -Dpackaging=jar
       - name: Maven Package
-        run: mvn clean package
+        run: mvn clean package -pl custom-notification-connector -am
       - uses: actions/upload-artifact@v1
         with:
           name: custom-notification-connector
