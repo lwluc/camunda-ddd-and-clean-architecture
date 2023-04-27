@@ -23,21 +23,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <version.notification>1.0.0</version.notification>
-        <version.springboot>2.7.3</version.springboot>
-        <version.camunda>7.18.0</version.camunda>
-        <version.slf4j>2.0.5</version.slf4j>
-        <version.lombok>1.18.24</version.lombok>
+        <version.springboot>2.7.11</version.springboot>
+        <version.camunda>7.19.0</version.camunda>
+        <version.slf4j>2.0.7</version.slf4j>
+        <version.lombok>1.18.26</version.lombok>
         <version.domainprimitives>0.1.0</version.domainprimitives>
         <version.jaxb>2.3.5</version.jaxb>
-        <version.okhttp>4.9.3</version.okhttp>
+        <version.okhttp>4.11.0</version.okhttp>
         <version.test-utils>1.0.0</version.test-utils>
-        <version.archunitJunit5>0.23.1</version.archunitJunit5>
+        <version.archunitJunit5>1.0.1</version.archunitJunit5>
         <version.bpmAssert>1.1.0</version.bpmAssert>
         <version.assertj>3.24.2</version.assertj>
         <version.junit-jupiter>5.9.2</version.junit-jupiter>
-        <version.mockito>5.2.0</version.mockito>
+        <version.mockito>5.3.1</version.mockito>
         <version.camundaMockito>6.18.0</version.camundaMockito>
-        <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
+        <version.surefirePlugin>3.0.0</version.surefirePlugin>
     </properties>
 
     <dependencyManagement>
