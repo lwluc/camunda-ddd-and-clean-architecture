@@ -1,7 +1,0 @@
-zeebe:
-  client:
-    cloud:
-      cluster-id: <your cluster ID>
-      client-id: <your client ID>
-      client-secret: <your secret>
-      region: <your region>
