@@ -4,46 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.weinbrecht.luc.bpm.architecture.recommendation</groupId>
     <artifactId>recommendation</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <version.springboot>2.7.3</version.springboot>
-        <version.camunda>7.18.0</version.camunda>
-        <version.junit5>5.8.2</version.junit5>
-        <version.lombok>1.18.24</version.lombok>
-        <version.domainprimitives>0.1.0</version.domainprimitives>
-        <version.bpmAssert>1.1.0</version.bpmAssert>
-        <version.camundaMockito>6.17.0</version.camundaMockito>
-        <version.archunitJunit5>0.23.1</version.archunitJunit5>
-        <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${version.springboot}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.camunda.bpm</groupId>
-                <artifactId>camunda-bom</artifactId>
-                <version>${version.camunda}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <parent>
+        <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
+        <artifactId>camunda-ddd-and-clean-architecture</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <dependencies>
         <dependency>
@@ -96,49 +64,15 @@
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${version.junit5}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${version.junit5}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${version.junit5}</version>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${version.junit-jupiter}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.camunda.bpm.extension</groupId>
-            <artifactId>camunda-bpm-junit5</artifactId>
-            <version>${version.bpmAssert}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.camunda.community.mockito</groupId>
-            <artifactId>camunda-platform-7-mockito</artifactId>
-            <version>${version.camundaMockito}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5</artifactId>
-            <version>${version.archunitJunit5}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- TODO: Parent POM or published to own Repository-->
         <dependency>
             <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
             <artifactId>test-utils</artifactId>
-            <version>1.0.0</version>
+            <version>${version.test-utils}</version>
             <scope>test</scope>
         </dependency>
 
@@ -156,6 +90,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${version.springboot}</version>
+                <configuration>
+                    <mainClass>de.weinbrecht.luc.bpm.architecture.recommendation.Application</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

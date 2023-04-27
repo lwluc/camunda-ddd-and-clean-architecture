@@ -4,25 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
     <artifactId>libraries</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
+
+    <parent>
+        <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
+        <artifactId>camunda-ddd-and-clean-architecture</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <modules>
         <module>notification</module>
     </modules>
-
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <version.springboot>2.7.3</version.springboot>
-        <version.junit5>5.8.2</version.junit5>
-        <version.mockito>5.2.0</version.mockito>
-        <version.lombok>1.18.24</version.lombok>
-        <version.domainprimitives>0.1.0</version.domainprimitives>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
