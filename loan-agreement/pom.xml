@@ -15,28 +15,25 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-starter</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <dependency>
@@ -68,10 +65,27 @@
         </dependency>
 
         <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${version.junit-jupiter}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-test</artifactId>
+            <version>${version.zeebe}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.camunda</groupId>
+            <artifactId>zeebe-process-test-extension</artifactId>
+            <version>${version.zeebe}</version>
         </dependency>
 
         <dependency>
@@ -97,6 +111,14 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

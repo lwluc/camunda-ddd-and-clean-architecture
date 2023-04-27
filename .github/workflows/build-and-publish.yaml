@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, 'camunda-8' ]
 
 jobs:
   loan-agreement-build:
@@ -29,7 +29,6 @@ jobs:
     name: Push Loan Agreement Docker image
     runs-on: ubuntu-22.04
     needs: [ loan-agreement-build ]
-    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./loan-agreement
@@ -49,9 +48,9 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}}-loan-agreement .
+        run: docker build -t ${{env.repo}}-loan-agreement-camunda-8 .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}-loan-agreement
+        run: docker push ${{env.repo}}-loan-agreement-camunda-8
 
   recommendation-build:
     name: Build Recommendation JAR
@@ -75,7 +74,6 @@ jobs:
     name: Push Recommendation Docker Image
     runs-on: ubuntu-22.04
     needs: [ recommendation-build ]
-    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./recommendation
@@ -95,9 +93,9 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}}-recommendation .
+        run: docker build -t ${{env.repo}}-recommendation-camunda-8 .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}-recommendation
+        run: docker push ${{env.repo}}-recommendation-camunda-8
 
   custom-connector-build:
     name: Build Custom Connector JAR
@@ -121,7 +119,6 @@ jobs:
     name: Push Custom Connector Docker Image
     runs-on: ubuntu-22.04
     needs: [ custom-connector-build ]
-    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./custom-notification-connector
@@ -141,6 +138,6 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
       - name: Build Docker image
-        run: docker build -t ${{env.repo}}-custom-notification-connector .
+        run: docker build -t ${{env.repo}}-custom-notification-connector-camunda-8 .
       - name: Publish Docker image
-        run: docker push ${{env.repo}}-custom-notification-connector
+        run: docker push ${{env.repo}}-custom-notification-connector-camunda-8

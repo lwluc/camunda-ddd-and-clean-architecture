@@ -1,44 +1,65 @@
 package de.weinbrecht.luc.bpm.architecture;
 
+import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.api.response.ActivateJobsResponse;
+import io.camunda.zeebe.client.api.response.DeploymentEvent;
+import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
+import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
+import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
 import org.assertj.core.api.Assertions;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
-import static org.assertj.core.api.AssertionsForClassTypes.entry;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+import static de.weinbrecht.luc.bpm.architecture.ProcessTestUtils.*;
+import static io.camunda.zeebe.process.test.assertions.BpmnAssert.assertThat;
 
-@ExtendWith(ProcessEngineExtension.class)
-@Deployment(resources = "element_template_test.bpmn")
+@ZeebeProcessTest
 class ElementTemplateTest {
     private static final String PROCESS_KEY = "P_Element_Template_Test";
     private static final String ST_SEND_NOTIFICATION = "ST_SendNotification";
+    private static final String JOB_TYPE = "de.weinbrecht.luc.bpm.architecture.sendcustomnotificationtaskhandler:1";
+    private static final String CHECK_VARIABLES = "check_variables";
+
+    private ZeebeTestEngine engine;
+    private ZeebeClient zeebeClient;
+
+    @BeforeEach
+    void deployProcess() {
+        DeploymentEvent deploymentEvent = deployResources(zeebeClient, "element_template_test.bpmn");
+        assertThat(deploymentEvent).containsProcessesByResourceName("element_template_test.bpmn");
+    }
 
     @Test
-    public void should_test_element_template() {
+    public void should_test_element_template() throws InterruptedException, TimeoutException {
         final String name = "Tester Tommy";
         final String address = "foo.bar@test";
-        ProcessInstance processInstance = runtimeService()
-                .startProcessInstanceByKey(PROCESS_KEY, Map.of(
-                        "name", name,
-                        "address", address
-                ));
-        assertThat(processInstance)
-                .isStarted()
-                .isWaitingAt(ST_SEND_NOTIFICATION);
+        ProcessInstanceEvent processInstanceEvent = zeebeClient.newCreateInstanceCommand()
+                .bpmnProcessId(PROCESS_KEY)
+                .latestVersion()
+                .variables(Map.of("name", name))
+                .send()
+                .join();
+        engine.waitForIdleState(Duration.ofSeconds(1L));
 
-        assertThat(processInstance).hasVariables("name");
+        assertThat(processInstanceEvent)
+                .isActive()
+                .isWaitingAtElements(ST_SEND_NOTIFICATION);
 
-        Map<String, Object> outputVariables = runtimeService().getVariables(externalTask(ST_SEND_NOTIFICATION).getExecutionId());
-        Assertions.assertThat(outputVariables).contains(entry("notificationAddress", address));
-        Assertions.assertThat(outputVariables).contains(entry("notificationContent", "Hello Tester Tommy,\n\nthis is a notification.\n\nMany greetings\nLuc"));
+        ActivateJobsResponse activatedJob = activateSingleJob(zeebeClient, JOB_TYPE);
+        Map<String, Object> inputVariables = activatedJob.getJobs().get(0).getVariablesAsMap();
+        Assertions.assertThat(inputVariables).containsKeys("name");
 
-        complete(externalTask(ST_SEND_NOTIFICATION));
+        completeTaskWithType(engine, zeebeClient, ST_SEND_NOTIFICATION, JOB_TYPE);
 
-        assertThat(processInstance).isEnded();
+        ActivateJobsResponse checkVariables = activateSingleJob(zeebeClient, CHECK_VARIABLES);
+        Map<String, Object> outputVariables = checkVariables.getJobs().get(0).getVariablesAsMap();
+        Assertions.assertThat(outputVariables).hasSize(1);
+        completeTaskWithType(engine, zeebeClient, "ST_check_Variables", CHECK_VARIABLES);
+
+        assertThat(processInstanceEvent).isCompleted();
     }
 }
