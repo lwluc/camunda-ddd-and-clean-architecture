@@ -29,7 +29,6 @@ jobs:
     name: Push Loan Agreement Docker image
     runs-on: ubuntu-22.04
     needs: [ loan-agreement-build ]
-    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./loan-agreement
@@ -75,7 +74,6 @@ jobs:
     name: Push Recommendation Docker Image
     runs-on: ubuntu-22.04
     needs: [ recommendation-build ]
-    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./recommendation
@@ -121,7 +119,6 @@ jobs:
     name: Push Custom Connector Docker Image
     runs-on: ubuntu-22.04
     needs: [ custom-connector-build ]
-    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./custom-notification-connector

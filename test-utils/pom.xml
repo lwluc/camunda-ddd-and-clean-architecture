@@ -13,18 +13,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-
-        <version.springboot>2.7.5</version.springboot>
-        <version.zeebe>8.1.6</version.zeebe>
-        <version.junit5>5.8.2</version.junit5>
-        <version.bpmAssert>1.1.0</version.bpmAssert>
-        <version.archunitJunit5>0.23.1</version.archunitJunit5>
-        <version.surefirePlugin>3.0.0-M6</version.surefirePlugin>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
