@@ -1,0 +1,96 @@
+@startuml
+
+hide footbox
+
+actor Client
+activate Client
+
+
+    participant " " as Restful <<Framework>>
+    Client -> Restful: JSON
+    |||
+box "Adapter.In"
+    entity " " as AdapterInDto <<DTO>>
+    activate Restful
+        Restful -> AdapterInDto
+        activate AdapterInDto
+        return
+        |||
+        participant " " as Controller <<Adapter>>
+== Request ==
+        Restful -> Controller: adapterMethod(AdapterInDto)
+        activate Controller
+            |||
+            participant " " as ResourceMapper <<Mapper>>
+            Controller -> ResourceMapper: map(AdapterInDto)
+end box
+box "Domain" #LightBlue
+            entity " " as DomainModel <<Model>>
+            activate ResourceMapper
+                ResourceMapper -> DomainModel
+                activate DomainModel
+                return
+            return DomainModel
+            |||
+            participant " " as UseCaseIn <<UseCaseIn>>
+            participant " " as Service <<Service>>
+            Controller -> Controller
+== Verarbeitung ==
+            activate Controller
+
+            Controller -> UseCaseIn : serviceMethod(DomainModel)
+                        UseCaseIn --> Service
+                        activate Service
+                            |||
+                            Service -> Service
+                            activate Service
+                                participant " " as UseCaseOut <<UseCaseOut>>
+            end box
+            box "Adapter.Out"
+                                participant " " as AdapterOut <<Adapter>>
+                                Service -> UseCaseOut: adapterMethod(DomainModel)
+                                UseCaseOut --> AdapterOut
+                                activate AdapterOut
+                                    |||
+                                    participant " " as EntityMapper <<Mapper>>
+                                    AdapterOut -> EntityMapper : map((DomainModel)
+                                    activate EntityMapper
+                                        entity " " as AdapterOutDto <<DTO>>
+                                        EntityMapper -> AdapterOutDto
+                                        activate AdapterOutDto
+                                        return
+                                    return AdapterOutDto
+                                    |||
+                                    AdapterOut -> AdapterOut :method(AdapterOutDto)
+                                    activate AdapterOut
+            end box
+                                        database System
+                                        AdapterOut -> System
+                                        activate System
+                                        return
+                                    return AdapterOutDto
+                                    |||
+                                    AdapterOut -> EntityMapper : map(AdapterOutDto)
+                                    activate EntityMapper
+                                        EntityMapper -> DomainModel
+                                        activate DomainModel
+                                        return
+                                    return DomainModel
+                                    |||
+                                return DomainModel
+                                UseCaseOut --> Service: DomainModel
+                            return DomainModel
+                        return DomainModel
+                        UseCaseIn --> Controller:DomainModel
+== Response ==
+            return DomainModel
+            |||
+            Controller -> ResourceMapper: map(DomainModel)
+            activate ResourceMapper
+                ResourceMapper -> AdapterInDto
+                activate AdapterInDto
+                return
+            return AdapterInDto
+        return AdapterInDto
+    return JSON
+@enduml

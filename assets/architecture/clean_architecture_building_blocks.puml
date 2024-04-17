@@ -1,0 +1,81 @@
+@startuml
+
+cloud " " as cloud.in {
+  component " " as cloud.in.component <<Client>>
+}
+
+cloud " " as cloud.out {
+    component " " as cloud.out.component <<System>> {
+    portout " " as cloud.out.port
+  }
+}
+
+package "App" {
+    package "Business Module" {
+      package "adapter" {
+        package "in" as adapter.in #lightgray {
+          component " " as adapter.in.component <<Adapter>>
+          component " " as adapter.in.dto <<DTO>>
+          component " " as adapter.in.mapper <<Mapper>>
+          port " " as adapter.in.port
+          adapter.in.mapper .L.> adapter.in.dto
+          adapter.in.component .> adapter.in.mapper
+          adapter.in.component --|> adapter.in.port
+          adapter.in.port --> adapter.in.dto
+        }
+
+        package "out" as adapter.out #lightgray {
+          component " " as adapter.out.component <<Adapter>>
+          component " " as adapter.out.dto <<DTO>>
+          component " " as adapter.out.mapper <<Mapper>>
+          adapter.out.mapper -> adapter.out.dto
+          adapter.out.component .> adapter.out.mapper
+        }
+      }
+
+      package "domain" #LightBlue {
+        component " " as domain.model <<Model>>
+        component " " as domain.service <<Service>>
+        domain.service .> domain.model
+      }
+
+      package "usecase" #LightBlue {
+        package "in" as usecase.in #white {
+          interface " " as usecase.in.component <<Usecase>>
+        }
+        package "out" as usecase.out #white {
+          interface " " as usecase.out.component <<Usecase>>
+        }
+      }
+
+      adapter.in.mapper --> domain.model
+        adapter.in.component ..> usecase.in.component
+
+        domain.service --|> usecase.in.component
+        domain.service ..> usecase.out.component
+
+        adapter.out.component --|> usecase.out.component
+        adapter.out.mapper ..> domain.model
+    }
+
+    package "Business Module <secondary>" {
+      package "usecase <secondary>" {
+        package "in" as usecase.in.secondary {
+          interface " " as usecase.in.secondary.component <<Usecase>>
+        }
+      }
+      package "domain <secondary>" {
+        component " " as domain.secondary.service <<Service>>
+      }
+
+      domain.secondary.service -L-|> usecase.in.secondary.component
+    }
+
+    adapter.out.component ..> usecase.in.secondary.component
+}
+
+cloud.in.component .D.> adapter.in.port
+cloud.out.port <.D. adapter.out.component
+cloud.out.port .D.> adapter.out.dto
+
+@enduml

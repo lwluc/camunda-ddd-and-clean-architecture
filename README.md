@@ -63,6 +63,19 @@ but these services should be more fine-grained so that they have only one respon
 You do not want one big service implementing all your business use cases. 
 Supporting components are placed around the core (your entities and use cases), such as persistence or user interfaces.
 
+#### Building Block View
+
+The [building block view](https://docs.arc42.org/section-5/) image below shows a stereotypical static decomposition of a system using Clean Architecture into building blocks as well as their dependencies. 
+
+![Clean-Architecture-Building-Block-View](assets/architecture/clean_architecture_building_blocks.svg)
+*Building Block View of clean architecture*
+
+#### Runtime View
+
+The [runtime view](https://docs.arc42.org/section-6/) image below describes concrete behavior and interactions of the stereotypical building blocks of a system using Clean Architecture.
+
+![Clean-Architecture-Runtime-Block-View](assets/architecture/clean_architecture_runtime_view.svg)
+*Building Block View of clean architecture*
 
 #### Dependency Inversion Principle
 
