@@ -13,9 +13,9 @@ jobs:
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: 17
       - name: Maven Package
@@ -36,18 +36,21 @@ jobs:
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: 17
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: loan-agreement
       - name: Move to Directory
         run: mkdir target && mv loan-agreement.jar ./target/loan-agreement.jar
-      - name: Login to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build Docker image
         run: docker build -t ${{env.repo}}-loan-agreement .
       - name: Publish Docker image
@@ -59,9 +62,9 @@ jobs:
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: 17
       - name: Maven Package
@@ -82,18 +85,21 @@ jobs:
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: 17
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: recommendation
       - name: Move to Directory
         run: mkdir target && mv recommendation.jar ./target/recommendation.jar
-      - name: Login to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build Docker image
         run: docker build -t ${{env.repo}}-recommendation .
       - name: Publish Docker image
@@ -105,9 +111,9 @@ jobs:
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: 17
       - name: Maven Package
@@ -128,18 +134,21 @@ jobs:
     env:
       repo: lwluc/camunda-ddd-and-clean-architecture
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: 17
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: custom-notification-connector
       - name: Move to Directory
         run: mkdir target && mv custom-notification-connector.jar ./target/custom-notification-connector.jar
-      - name: Login to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p '${{ secrets.DOCKER_TOKEN }}'
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build Docker image
         run: docker build -t ${{env.repo}}-custom-notification-connector .
       - name: Publish Docker image
