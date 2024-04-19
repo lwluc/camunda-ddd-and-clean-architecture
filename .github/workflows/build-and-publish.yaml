@@ -22,7 +22,7 @@ jobs:
           cache: 'maven'
       - name: Maven Package
         run: mvn clean package -pl loan-agreement -am
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: loan-agreement
           path: loan-agreement/target/loan-agreement.jar
@@ -75,7 +75,7 @@ jobs:
           cache: 'maven'
       - name: Maven Package
         run: mvn clean package -pl recommendation -am
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: recommendation
           path: recommendation/target/recommendation.jar
@@ -128,7 +128,7 @@ jobs:
           cache: 'maven'
       - name: Maven Package
         run: mvn clean package -pl custom-notification-connector -am
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: custom-notification-connector
           path: custom-notification-connector/target/custom-notification-connector.jar
