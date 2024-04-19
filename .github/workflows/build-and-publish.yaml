@@ -49,8 +49,6 @@ jobs:
         with:
           name: loan-agreement
           path: target
-      - name: Display structure of downloaded files
-        run: ls -R target
       - name: Docker login
         uses: docker/login-action@v3
         with:
@@ -103,10 +101,6 @@ jobs:
         with:
           name: recommendation
           path: target
-      - name: Display structure of downloaded files
-        run: ls -R target
-      - name: Move to Directory
-        run: mkdir target && mv recommendation.jar ./target/recommendation.jar
       - name: Docker login
         uses: docker/login-action@v3
         with:
@@ -159,8 +153,6 @@ jobs:
         with:
           name: custom-notification-connector
           path: target
-      - name: Display structure of downloaded files
-        run: ls -R target
       - name: Docker login
         uses: docker/login-action@v3
         with:
