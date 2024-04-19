@@ -48,8 +48,9 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: loan-agreement
-      - name: Move to Directory
-        run: mkdir target && mv loan-agreement.jar ./target/loan-agreement.jar
+          path: target
+      - name: Display structure of downloaded files
+        run: ls -R target
       - name: Docker login
         uses: docker/login-action@v3
         with:
@@ -101,6 +102,9 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: recommendation
+          path: target
+      - name: Display structure of downloaded files
+        run: ls -R target
       - name: Move to Directory
         run: mkdir target && mv recommendation.jar ./target/recommendation.jar
       - name: Docker login
@@ -154,8 +158,9 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: custom-notification-connector
-      - name: Move to Directory
-        run: mkdir target && mv custom-notification-connector.jar ./target/custom-notification-connector.jar
+          path: target
+      - name: Display structure of downloaded files
+        run: ls -R target
       - name: Docker login
         uses: docker/login-action@v3
         with:
