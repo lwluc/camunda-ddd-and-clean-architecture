@@ -9,6 +9,18 @@ touching your domain centered code: [How Clean Architecture helps you migrating 
 
 The [BPMN process](assets/processes/loan_agreement.png) which start a [second process](assets/processes/cross_selling_recommendation.png) via message correlation should represent a tiny business process just to demonstrate the architecture.
 
+Configure your [Camunda Platform 8 SaaS](https://camunda.com/get-started/) to connect to using the [following properties](https://github.com/camunda-community-hub/spring-zeebe#configuring-camunda-platform-8-saas-connection) .
+
+If you want to run [Zeebe locally](https://docs.camunda.io/docs/self-managed/platform-deployment/kubernetes-helm/) you need to use the following properties ([source](https://github.com/camunda-community-hub/spring-zeebe#configuring-camunda-platform-8-saas-connection)):
+
+```yaml
+zeebe:
+  client:
+    broker:
+      gateway-address: localhost:26500
+    security:
+      plaintext: true
+```
 ### 🛫Start the process
 
 With the following POST request, you could start the process:

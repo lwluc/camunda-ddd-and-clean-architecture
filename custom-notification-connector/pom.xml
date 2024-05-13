@@ -15,6 +15,7 @@
 
     <properties>
         <version.notification>1.0.0</version.notification>
+        <version.connector-core>0.8.1</version.connector-core>
     </properties>
 
     <dependencies>
@@ -25,9 +26,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
-            <version>${version.camunda}</version>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-starter</artifactId>
+            <version>${version.zeebe}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.camunda.connector</groupId>
+            <artifactId>connector-validation</artifactId>
+            <version>${version.connector-core}</version>
         </dependency>
 
         <dependency>
@@ -53,6 +59,12 @@
         </dependency>
 
         <dependency>
+            <groupId>de.weinbrecht.luc.bpm.architecture</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${version.test-utils}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${version.junit-jupiter}</version>
@@ -71,27 +83,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.camunda.bpm</groupId>
-            <artifactId>camunda-engine</artifactId>
-            <version>${version.camunda}</version>
+            <groupId>io.camunda</groupId>
+            <artifactId>spring-zeebe-test</artifactId>
+            <version>${version.zeebe}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
-            <version>${version.camunda}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.bpm</groupId>
-            <artifactId>camunda-bpm-junit5</artifactId>
-            <version>${version.camunda}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.community.mockito</groupId>
-            <artifactId>camunda-platform-7-mockito</artifactId>
-            <version>${version.camundaMockito}</version>
+            <groupId>io.camunda</groupId>
+            <artifactId>zeebe-process-test-extension</artifactId>
+            <version>${version.zeebe}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -1,58 +1,50 @@
 package de.weinbrecht.luc.bpm.architecture.recommendation;
 
-import de.weinbrecht.luc.bpm.architecture.recommendation.adapter.in.process.PickContent;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension;
-import org.junit.jupiter.api.BeforeEach;
+import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.api.response.PublishMessageResponse;
+import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
+import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Map;
 
-import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.CUSTOMER_NUMBER;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
-import static org.camunda.community.mockito.DelegateExpressions.registerJavaDelegateMock;
-import static org.camunda.community.mockito.DelegateExpressions.verifyJavaDelegateMock;
+import static de.weinbrecht.luc.bpm.architecture.ProcessTestUtils.*;
+import static de.weinbrecht.luc.bpm.architecture.recommendation.adapter.common.ProcessConstants.*;
+import static io.camunda.zeebe.process.test.assertions.BpmnAssert.assertThat;
 
-@ExtendWith(ProcessEngineExtension.class)
+@ZeebeProcessTest
 class ProcessTest {
 
-    public static final String PROCESS_DEFINITION = "Cross_Selling_Recommendation";
+    private ZeebeTestEngine engine;
+    private ZeebeClient client;
 
     private static final String START_EVENT = "CrossSellingStartEvent";
     private static final String PICK_CONTENT_SERVICE_TASK = "PickContentServiceTask";
     private static final String SEND_RECOMMENDATION_SERVICE_TASK = "SendRecommendationServiceTask";
     private static final String END_EVENT = "CrossSellingRecommendationEndEvent";
-
-    @BeforeEach
-    void setUp() {
-        registerJavaDelegateMock(PickContent.class);
-    }
+    private static final String CONNECTOR_TOPIC = "de.weinbrecht.luc.bpm.architecture.sendcustomnotificationtaskhandler:1";
 
     @Test
-    @Deployment(resources = "cross_selling_recommendation.bpmn")
-    void shouldExecuteProcess_happy_path() {
-        ProcessInstance processInstance = runtimeService().startProcessInstanceByKey(
-                PROCESS_DEFINITION,
-                Map.of(CUSTOMER_NUMBER, "A1")
-        );
+    void testRunsProcess() throws Exception {
+        deployResource(client, "cross_selling_recommendation.bpmn");
 
-        assertThat(processInstance)
-                .hasPassedInOrder(
-                        START_EVENT,
-                        PICK_CONTENT_SERVICE_TASK)
-                .isWaitingAtExactly(SEND_RECOMMENDATION_SERVICE_TASK);
+        final PublishMessageResponse response = sendMessage(engine, client, START_EVENT_MESSAGE_REF, "",
+                Map.of(CUSTOMER_NUMBER, "A1"));
 
-        verifyJavaDelegateMock(PickContent.class).executed();
+        assertThat(response).extractingProcessInstance()
+                .hasPassedElement(START_EVENT)
+                .isWaitingAtElements(PICK_CONTENT_SERVICE_TASK);
 
-        complete(externalTask(SEND_RECOMMENDATION_SERVICE_TASK));
+        completeTaskWithType(engine , client, PICK_CONTENT_SERVICE_TASK, PICK_CONTENT_TASK);
 
-        assertThat(processInstance)
-                .hasPassedInOrder(
-                        SEND_RECOMMENDATION_SERVICE_TASK,
-                        END_EVENT);
+        assertThat(response).extractingProcessInstance()
+                .hasPassedElementsInOrder(PICK_CONTENT_SERVICE_TASK)
+                .isWaitingAtElements(SEND_RECOMMENDATION_SERVICE_TASK);
 
-        assertThat(processInstance).isEnded();
+        completeTaskWithType(engine , client, SEND_RECOMMENDATION_SERVICE_TASK, CONNECTOR_TOPIC);
+
+        assertThat(response).extractingProcessInstance()
+                .hasPassedElementsInOrder(SEND_RECOMMENDATION_SERVICE_TASK, END_EVENT)
+                .isCompleted();
     }
 }

@@ -24,13 +24,13 @@
 
         <version.notification>1.0.0</version.notification>
         <version.springboot>2.7.11</version.springboot>
-        <version.camunda>7.19.0</version.camunda>
+        <version.zeebe>8.2.0</version.zeebe>
         <version.slf4j>2.0.7</version.slf4j>
         <version.lombok>1.18.26</version.lombok>
         <version.domainprimitives>0.1.0</version.domainprimitives>
         <version.jaxb>2.3.5</version.jaxb>
         <version.okhttp>4.11.0</version.okhttp>
-        <version.test-utils>1.0.0</version.test-utils>
+        <version.test-utils>1.1.0</version.test-utils>
         <version.archunitJunit5>1.0.1</version.archunitJunit5>
         <version.bpmAssert>1.1.0</version.bpmAssert>
         <version.assertj>3.24.2</version.assertj>
@@ -50,9 +50,9 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.camunda.bpm</groupId>
-                <artifactId>camunda-bom</artifactId>
-                <version>${version.camunda}</version>
+                <groupId>io.camunda</groupId>
+                <artifactId>zeebe-bom</artifactId>
+                <version>${version.zeebe}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
